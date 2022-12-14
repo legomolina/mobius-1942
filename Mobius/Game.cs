@@ -13,6 +13,7 @@ namespace Engine
         private SDL_Event events;
 
         protected int FrameRate { get; set; } = 120;
+        protected AudioManager Audio { get; private set; }
         protected GraphicsManager Graphics { get; private set; }
 
         public Game()
@@ -24,13 +25,23 @@ namespace Engine
                 throw new GraphicsNotInitializedException();
             }
 
-            assetManager = new AssetManager(Graphics!);
+            Audio = AudioManager.Instance;
+
+            if (!Audio.Initialized)
+            {
+                throw new AudioNotInitializedException();
+            }
+
+            assetManager = new AssetManager(Graphics!, Audio!);
             gameTime = new GameTime();
         }
 
         public void Dispose()
         {
+            Audio.Dispose();
             Graphics.Dispose();
+
+            SDL_Quit();
         }
 
         public virtual void LoadContent(AssetManager assetManager) { }

@@ -13,6 +13,7 @@ namespace _1942.Entities
     internal class Enemy : Ship
     {
         private const string BULLET_TEXTURE_FILENAME = "Assets/Textures/bullet.png";
+        private const string BULLET_SOUND_FILENAME = "Assets/Effects/bullet_shot.wav";
         private const string ENEMY_TEXTURE_FILENAME = "Assets/Textures/enemy1.png";
         private const int SHOT_WAIT_TIME = 500; // milliseconds
 
@@ -31,6 +32,8 @@ namespace _1942.Entities
         {
             bulletTexture = assetManager.LoadTexture(BULLET_TEXTURE_FILENAME);
             shipTexture = assetManager.LoadTexture(ENEMY_TEXTURE_FILENAME);
+            shootSound = assetManager.LoadSoundEffect(BULLET_SOUND_FILENAME);
+            shootSound.SetVolume(15);
 
             shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.HORIZONTAL)
             {
@@ -54,6 +57,7 @@ namespace _1942.Entities
                     Speed = 0.5f
                 };
 
+                shootSound!.Play(1, 1);
                 bullets.Add(bullet);
             }
         }

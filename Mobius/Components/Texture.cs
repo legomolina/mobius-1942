@@ -4,7 +4,7 @@ using Engine.Core.Math;
 
 namespace Engine.Components
 {
-    public class Texture
+    public class Texture : IDisposable
     {
         private readonly GraphicsManager graphics;
         private readonly IntPtr texture;
@@ -83,6 +83,11 @@ namespace Engine.Components
             };
 
             graphics.DrawTexture(texture, renderRect, clipRect, rotation, centerPoint);
+        }
+
+        public void Dispose()
+        {
+            SDL_DestroyTexture(texture);
         }
     }
 }

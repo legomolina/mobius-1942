@@ -7,6 +7,7 @@ namespace _1942.Entities
     internal class Player : Ship
     {
         private const string BULLET_TEXTURE_FILENAME = "Assets/Textures/bullet.png";
+        private const string BULLET_SOUND_FILENAME = "Assets/Effects/bullet_shot.wav";
         private const string PLAYER_TEXTURE_FILENAME = "Assets/Textures/player.png";
 
         public Player(GraphicsManager graphics) : base(graphics)
@@ -16,8 +17,11 @@ namespace _1942.Entities
 
         public override void LoadContent(AssetManager assetManager)
         {
-            bulletTexture = assetManager.LoadTexture(BULLET_TEXTURE_FILENAME, true);
-            shipTexture = assetManager.LoadTexture(PLAYER_TEXTURE_FILENAME, true);
+            bulletTexture = assetManager.LoadTexture(BULLET_TEXTURE_FILENAME);
+            shipTexture = assetManager.LoadTexture(PLAYER_TEXTURE_FILENAME);
+            shootSound = assetManager.LoadSoundEffect(BULLET_SOUND_FILENAME);
+            shootSound.SetVolume(15);
+
             shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.HORIZONTAL)
             {
                 AnimationFPS = ANIMATION_FPS,
@@ -84,6 +88,7 @@ namespace _1942.Entities
             Point startPosition = new(Position.X + Width / 2 - bulletTexture!.Width / 2, Position.Y - 5);
             Bullet bullet = new(bulletTexture!, startPosition, new Vector2(0, -1));
 
+            shootSound!.Play(1, 0);
             bullets.Add(bullet);
         }
     }

@@ -73,7 +73,7 @@ namespace Engine.Core
         {
             if (SDL_Init(SDL_INIT_VIDEO) < 0)
             {
-                Console.WriteLine($"SDL Initialization error: {SDL_GetError()}");
+                Console.WriteLine($"SDL Video initialization error: {SDL_GetError()}");
                 return false;
             }
 
@@ -108,16 +108,6 @@ namespace Engine.Core
             return true;
         }
 
-        private IntPtr LoadBMP(string file)
-        {
-            return SDL_LoadBMP(file);
-        }
-
-        private IntPtr LoadPNG(string file)
-        {
-            return IMG_Load(file);
-        }
-
         public void ClearBackBuffer()
         {
             SDL_RenderClear(renderer);
@@ -128,28 +118,9 @@ namespace Engine.Core
             SDL_RenderPresent(renderer);
         }
 
-        internal IntPtr LoadTexture(string file, bool isTransparent = false)
+        internal IntPtr LoadTexture(string file)
         {
-            string extension = file.Split(".").Last();
-            string completePath = SDL_GetBasePath() + file;
-            IntPtr texture;
-            IntPtr surfacePointer = extension switch
-            {
-                "png" => LoadPNG(completePath),
-                "bmp" => LoadBMP(completePath),
-                _ => throw new TextureFileExtensionException(extension),
-            };
-
-            if (surfacePointer == IntPtr.Zero)
-            {
-                throw new TextureLoadingException(file);
-            }
-
-            SDL_Surface? surface = Marshal.PtrToStructure<SDL_Surface>(surfacePointer);
-
-            SDL_SetColorKey(surfacePointer, isTransparent ? 1 : 0, SDL_MapRGB(surface.Value.format, 0xFF, 0, 0xFF));
-
-            texture = SDL_CreateTextureFromSurface(renderer, surfacePointer);
+            IntPtr texture = IMG_LoadTexture(renderer, file);
 
             if (texture == IntPtr.Zero)
             {
@@ -181,7 +152,7 @@ namespace Engine.Core
             SDL_DestroyRenderer(renderer);
             SDL_DestroyWindow(window);
 
-            SDL_Quit();
+            IMG_Quit();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Engine.Components
 {
-    public class Sprite : GameComponent
+    public class Sprite : GameComponent, IDisposable
     {
         protected readonly Texture texture;
 
@@ -17,6 +17,11 @@ namespace Engine.Components
 
             Width = texture.Width;
             Height = texture.Height;
+        }
+
+        public void Dispose()
+        {
+            texture.Dispose();
         }
 
         public override void Render()

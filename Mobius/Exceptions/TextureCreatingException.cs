@@ -1,4 +1,4 @@
-﻿using static SDL2.SDL;
+﻿using static SDL2.SDL_image;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace Engine.Exceptions
 {
     public class TextureCreatingException : Exception
     {
-        public TextureCreatingException(string path) : base($"Error creating texture {path}. {SDL_GetError()}") { }
+        public TextureCreatingException(string path) : base($"Error creating texture {path}. {IMG_GetError()}") { }
     }
 }

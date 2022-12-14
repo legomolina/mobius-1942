@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace _1942.Entities
 {
-    internal abstract class Ship : Entity, IUpdatable, IDrawable
+    internal abstract class Ship : Entity, IUpdatable, IDrawable, IDisposable
     {
         protected const int ANIMATION_FPS = 24;
 
@@ -20,6 +20,7 @@ namespace _1942.Entities
         protected Texture? bulletTexture;
         protected Texture? shipTexture;
         protected Sprite? shipSprite;
+        protected SoundEffect? shootSound;
         
         protected float Speed { get; set; }
 
@@ -38,7 +39,7 @@ namespace _1942.Entities
                 return;
             }
 
-            shipSprite.Update(gameTime);
+            shipSprite!.Update(gameTime);
 
             foreach (Bullet bullet in bullets.ToList())
             {
@@ -58,7 +59,7 @@ namespace _1942.Entities
                 return;
             }
 
-            shipSprite.Position = Position;
+            shipSprite!.Position = Position;
             shipSprite.Rotation = Rotation;
             shipSprite.Render();
 
@@ -69,5 +70,12 @@ namespace _1942.Entities
         }
 
         protected abstract void Shoot();
+
+        public void Dispose()
+        {
+            bulletTexture?.Dispose();
+            shipTexture?.Dispose();
+            shipSprite?.Dispose();
+        }
     }
 }

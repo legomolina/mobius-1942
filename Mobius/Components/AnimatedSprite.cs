@@ -9,7 +9,7 @@ namespace Engine.Components
         VERTICAL
     }
 
-    public class AnimatedSprite : Sprite, IUpdatable
+    public class AnimatedSprite : Sprite, IUpdatable, IDisposable
     {
         private readonly AnimationDirections direction;
         private readonly Rectangle[] frames;
