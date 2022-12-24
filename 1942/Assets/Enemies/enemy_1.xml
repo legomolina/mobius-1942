@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Enemy>
+	<Path>
+		<Waypoints>
+			<Waypoint type="point" x="-50" y="50" />
+			<Waypoint type="arc" x="$window_width - 200" y="150" radius="100" minDeg="270" maxDeg="90" precision="10" />
+			<Waypoint type="point" x="-50" y="250" />
+		</Waypoints>
+	</Path>
+</Enemy>

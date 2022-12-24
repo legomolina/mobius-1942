@@ -8,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace _1942.Entities
 {
-    internal abstract class Entity : GameComponent
+    public abstract class Entity : GameComponent
     {
-        internal Point Center
+        public Point Center
         {
             get
             {
                 return new Point(Position.X + Width / 2, Position.Y + Height / 2);
             }
         }
+
+        public int Health { get; protected set; }
     }
 }

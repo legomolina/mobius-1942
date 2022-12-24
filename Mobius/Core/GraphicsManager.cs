@@ -145,6 +145,18 @@ namespace Engine.Core
             SDL_RenderCopyEx(renderer, texture, ref clipRect, ref renderRect, rotation, ref center, SDL_RendererFlip.SDL_FLIP_NONE);
         }
 
+        internal void DrawRectangle(SDL_Rect rect, byte r, byte g, byte b, byte a)
+        {
+            SDL_SetRenderDrawColor(renderer, r, g, b, a);
+            SDL_RenderDrawRect(renderer, ref rect);
+        }
+
+        internal void DrawLine(SDL_Point p1, SDL_Point p2, byte r, byte g, byte b, byte a)
+        {
+            SDL_SetRenderDrawColor(renderer, r, g, b, a);
+            SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
+        }
+
         public void Dispose()
         {
             Initialized = false;

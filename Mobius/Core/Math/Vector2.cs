@@ -44,6 +44,14 @@
             return new Vector2(x, y);
         }
 
+        public float AngleBetween(Vector2 vec)
+        {
+            double sin = X * vec.Y - vec.X * Y;
+            double cos = X * vec.X - Y * vec.Y;
+
+            return (float)(System.Math.Atan2(sin, cos) * (180 / System.Math.PI));
+        }
+
         public Point ToPoint()
         {
             return new Point(X, Y);
@@ -77,6 +85,11 @@
         public static Vector2 operator *(Vector2 a, float factor)
         {
             return new Vector2(a.X * factor, a.Y * factor);
+        }
+
+        public static Vector2 operator /(Vector2 a, float factor)
+        {
+            return new Vector2(a.X / factor, a.Y / factor);
         }
 
         public static bool operator ==(Vector2 a, Vector2 b)

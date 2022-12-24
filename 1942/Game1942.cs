@@ -1,4 +1,5 @@
 ﻿using _1942.Entities;
+using _1942.Entities.Enemies;
 using Engine;
 using Engine.Components;
 using Engine.Core;
@@ -10,8 +11,8 @@ namespace _1942
     {
         private readonly InputManager inputManager;
         private readonly Player player;
-        private readonly Enemy enemy;
 
+        private Fighter fighter;
         private Sprite? background;
 
         internal Game1942() : base()
@@ -21,7 +22,7 @@ namespace _1942
 
             inputManager = InputManager.Instance;
             player = new Player(Graphics);
-            enemy = new Enemy(Graphics, player);
+            fighter = new(Graphics, player);
         }
 
         public override void LoadContent(AssetManager assetManager)
@@ -31,10 +32,9 @@ namespace _1942
 
             base.LoadContent(assetManager);
             player.LoadContent(assetManager);
-            enemy.LoadContent(assetManager);
+            fighter.LoadContent(assetManager);
 
             player.Position = new Point(Graphics.WindowWidth / 2 - player.Width / 2, Graphics.WindowHeight - player.Height);
-            enemy.Position = new Point(Graphics.WindowWidth / 2 - enemy.Width / 2, 360);
         }
 
         public override void Update(GameTime gameTime)
@@ -42,14 +42,31 @@ namespace _1942
             base.Update(gameTime);
 
             inputManager.Update(gameTime);
+            player.Update(gameTime);
+
+            if (fighter.Health > 0)
+            {
+                fighter.Update(gameTime);
+            } 
+            else
+            {
+                fighter.Dispose();
+            }
+        }
+
+        public override void Render()
+        {
+            base.Render();
 
             Graphics!.ClearBackBuffer();
 
             background!.Render();
-            player.Update(gameTime);
             player.Render();
-            enemy.Update(gameTime);
-            enemy.Render();
+
+            if (fighter.Health > 0)
+            {
+                fighter.Render();
+            }
 
             Graphics.Render();
         }

@@ -62,6 +62,8 @@ namespace Engine
                     }
                 }
 
+                Render();
+
                 Update(gameTime);
 
                 gameTime.LateUpdate();
@@ -69,5 +71,6 @@ namespace Engine
         }
 
         public virtual void Update(GameTime gameTime) { }
+        public virtual void Render() { }
     }
 }

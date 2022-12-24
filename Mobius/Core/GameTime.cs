@@ -28,7 +28,8 @@ namespace Engine.Core
                 {
                     DeltaTime = MIN_FPS_DELTA_TIME;
                 }
-            } else
+            } 
+            else
             {
                 SDL_Delay(1);
             }
