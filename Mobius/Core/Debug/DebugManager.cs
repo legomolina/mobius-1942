@@ -1,5 +1,6 @@
 ﻿using static SDL2.SDL;
 using Engine.Core.Math;
+using Engine.Core.Automation.Tracking;
 
 namespace Engine.Core.Debug
 {
@@ -42,6 +43,17 @@ namespace Engine.Core.Debug
             };
 
             GraphicsManager.Instance.DrawRectangle(rect, color.R, color.G, color.B, color.A);
+        }
+
+        public static void RenderTrack(Track track)
+        {
+            for (int i = 0; i < track.Waypoints.Count - 1; i++)
+            {
+                Waypoint current = track.Waypoints[i];
+                Waypoint next = track.Waypoints[i + 1];
+
+                DebugManager.RenderLine(current.Position, next.Position);
+            }
         }
     }
 }

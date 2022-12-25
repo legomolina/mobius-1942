@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Engine.Core.Math
+﻿namespace Engine.Core.Math
 {
     public struct Point
     {
@@ -30,6 +24,16 @@ namespace Engine.Core.Math
             return $"{X},{Y}";
         }
 
+        public static Point operator +(Point a, Point b)
+        {
+            return new Point(a.X + b.X, a.Y + b.Y);
+        }
+
+        public static Point operator -(Point a, Point b)
+        {
+            return new Point(b.X - a.X, b.Y - b.X);
+        }
+
         public static bool operator ==(Point a, Point b)
         {
             return a.X == b.X && a.Y == b.Y;
@@ -38,6 +42,21 @@ namespace Engine.Core.Math
         public static bool operator !=(Point a, Point b)
         {
             return a.X != b.X || a.Y != b.Y;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return X == ((Point)obj).X && Y == ((Point)obj).Y;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

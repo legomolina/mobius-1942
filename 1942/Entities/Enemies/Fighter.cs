@@ -1,6 +1,8 @@
 ﻿using Engine.Components;
 using Engine.Core;
+using Engine.Core.Automation.Tracking;
 using Engine.Core.Math;
+using Mobius.Core.Automation.Tracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +11,32 @@ using System.Threading.Tasks;
 
 namespace _1942.Entities.Enemies
 {
-    internal class Fighter : Enemy
+    internal class Fighter : Enemy, ITrackFollower
     {
         private const string TextureFilename = "Assets/Textures/fighter.png";
         private const string BulletTextureFilename = "Assets/Textures/bullet.png";
 
-        private readonly Point startPosition;
-
-        private Point? destination = null;
-        private bool isReturning = false;
-        private bool isShoot = false;
+        public Track Track { get; set; }
 
         internal Fighter(GraphicsManager graphics, Player player) : base(graphics, player)
         {
-            startPosition = new Point(CalculateInitX(), -50);
+            CreateTrack();
             Health = 50;
             Speed = 0.25f;
         }
+
+        private void CreateTrack()
+        {
+            TrackFactory factory = new TrackFactory();
+            Point startPosition = new Point(CalculateInitX(), -50);
+            Point endPosition = new Point(graphics.WindowWidth - startPosition.X, startPosition.Y);
+
+            Track = factory
+                .AddWaypoint(startPosition)
+                .AddWaypoint(player.Center)
+                .AddWaypoint(endPosition)
+                .Build();
+        } 
 
         public override void LoadContent(AssetManager assetManager)
         {
@@ -39,7 +50,7 @@ namespace _1942.Entities.Enemies
             Width = ((AnimatedSprite)shipSprite).FrameWidth;
             Height = ((AnimatedSprite)shipSprite).FrameHeight;
 
-            Position = startPosition;
+            Position = Track.CurrentWaypoint.Position;
         }
 
         public override void Update(GameTime gameTime)
@@ -103,7 +114,7 @@ namespace _1942.Entities.Enemies
         private int CalculateInitX()
         {
             Random random = new Random();
-            int side = random.Next(0, 1);
+            int side = random.Next(0, 2);
             int min, max;
 
             if (side == 0)
@@ -118,6 +129,16 @@ namespace _1942.Entities.Enemies
             }
 
             return random.Next(min, max);
+        }
+
+        public void StartFollow()
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITrackFollower.StartFollow()
+        {
+            throw new NotImplementedException();
         }
     }
 }

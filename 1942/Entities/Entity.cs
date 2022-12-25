@@ -19,5 +19,10 @@ namespace _1942.Entities
         }
 
         public int Health { get; protected set; }
+
+        public virtual Rectangle GetArea()
+        {
+            return new Rectangle(Position.X, Position.Y, Width, Height);
+        }
     }
 }
