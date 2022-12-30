@@ -1,17 +1,23 @@
 ﻿using Engine.Core;
 using Engine.Core.Math;
 using Engine.Components;
+using System.Diagnostics;
+using Engine.Core.Debug;
 
 namespace _1942.Entities
 {
-    internal class Player : Ship
+    public class Player : Ship
     {
         private const string BULLET_TEXTURE_FILENAME = "Assets/Textures/bullet.png";
         private const string BULLET_SOUND_FILENAME = "Assets/Effects/bullet_shot.wav";
         private const string PLAYER_TEXTURE_FILENAME = "Assets/Textures/player.png";
 
+        public Area Area => new(this, 50);
+
         public Player(GraphicsManager graphics) : base(graphics)
         {
+            Width = 32;
+            Height = 32;
             Speed = 0.25f;
         }
 
@@ -26,9 +32,6 @@ namespace _1942.Entities
             {
                 AnimationFPS = ANIMATION_FPS,
             };
-
-            Width = ((AnimatedSprite)shipSprite).FrameWidth;
-            Height = ((AnimatedSprite)shipSprite).FrameHeight;
         }
 
         public override void Update(GameTime gameTime)
@@ -72,6 +75,13 @@ namespace _1942.Entities
             {
                 MoveTo(direction.Normalized() * Speed * gameTime.DeltaTime);
             }
+        }
+
+        public override void Render()
+        {
+            base.Render();
+
+            DebugManager.RenderRectangle(Area.ToRectangle());
         }
 
         private void MoveTo(Vector2 velocity)

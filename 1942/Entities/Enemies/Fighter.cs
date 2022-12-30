@@ -1,24 +1,19 @@
 ﻿using Engine.Components;
 using Engine.Core;
 using Engine.Core.Automation.Tracking;
+using Engine.Core.Debug;
 using Engine.Core.Math;
-using Mobius.Core.Automation.Tracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _1942.Entities.Enemies
 {
-    internal class Fighter : Enemy, ITrackFollower
+    public class Fighter : Enemy
     {
         private const string TextureFilename = "Assets/Textures/fighter.png";
         private const string BulletTextureFilename = "Assets/Textures/bullet.png";
 
         public Track Track { get; set; }
 
-        internal Fighter(GraphicsManager graphics, Player player) : base(graphics, player)
+        public Fighter(GraphicsManager graphics, Player player) : base(graphics, player)
         {
             CreateTrack();
             Health = 50;
@@ -27,16 +22,18 @@ namespace _1942.Entities.Enemies
 
         private void CreateTrack()
         {
-            TrackFactory factory = new TrackFactory();
-            Point startPosition = new Point(CalculateInitX(), -50);
-            Point endPosition = new Point(graphics.WindowWidth - startPosition.X, startPosition.Y);
+            Point startPosition = new(CalculateInitX(), -50);
+            Point endPosition = new(graphics.WindowWidth - startPosition.X, startPosition.Y);
+            Point playerPosition = player.Area.GetRandomPoint(AreaQuadrants.TopLeft | AreaQuadrants.TopRight);
 
-            Track = factory
-                .AddWaypoint(startPosition)
-                .AddWaypoint(player.Center)
+            Console.WriteLine(playerPosition);
+
+            Track = new TrackFactory()
+                .Begin(startPosition)
+                .AddWaypoint(playerPosition)
                 .AddWaypoint(endPosition)
                 .Build();
-        } 
+        }
 
         public override void LoadContent(AssetManager assetManager)
         {
@@ -50,51 +47,36 @@ namespace _1942.Entities.Enemies
             Width = ((AnimatedSprite)shipSprite).FrameWidth;
             Height = ((AnimatedSprite)shipSprite).FrameHeight;
 
-            Position = Track.CurrentWaypoint.Position;
+            Position = Track.CurrentWaypoint.Position + new Point(-Width / 2, -Height / 2);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            // Set initial destination
-            if (!destination.HasValue)
+            if (Track.IsLastWaypoint())
             {
-                Random random = new Random();
-                int minPlayerPositionX = (int)player.Position.X - 50;
-                int maxPlayerPositionX = (int)player.Position.X + 50;
-                int minPlayerPositionY = (int)player.Position.Y - 200;
-                int maxPlayerPositionY = (int)player.Position.Y - 50;
-                destination = new(random.Next(minPlayerPositionX, maxPlayerPositionX), random.Next(minPlayerPositionY, maxPlayerPositionY));
+                Health = 0;
+                return;
             }
 
-            Vector2 moveDirection = Vector2.FromPoints(Position, destination.Value);
-            float distanceToDestination = (Position.ToVector() - destination.Value.ToVector()).Magnitude();
+            Vector2 moveDirection = Vector2.FromPoints(Center, Track.NextWaypoint.Position);
+            float distanceToDestination = (Center.ToVector() - Track.NextWaypoint.Position.ToVector()).Magnitude();
+
+            if (distanceToDestination < 20)
+            {
+                Track.MoveNextWaypoint();
+            }
 
             Position = (moveDirection / moveDirection.Magnitude() * Speed * gameTime.DeltaTime + Position.ToVector()).ToPoint();
             Rotation = new Vector2(0, 1).AngleBetween(moveDirection / moveDirection.Magnitude()) * -1;
-
-            if (distanceToDestination < 50 && !isShoot)
-            {
-                isShoot = true;
-                Shoot();
-            }
-
-            if (distanceToDestination < 10)
-            {
-                isReturning = true;
-                destination = new Point(graphics.WindowWidth - startPosition.X, startPosition.Y);
-            }
-
-            if (Position.Y < 0 && isReturning)
-            {
-                Health = 0;
-            }
         }
 
         public override void Render()
         {
             base.Render();
+
+            DebugManager.RenderTrack(Track);
         }
 
         protected override void Shoot()
@@ -129,16 +111,6 @@ namespace _1942.Entities.Enemies
             }
 
             return random.Next(min, max);
-        }
-
-        public void StartFollow()
-        {
-            throw new NotImplementedException();
-        }
-
-        void ITrackFollower.StartFollow()
-        {
-            throw new NotImplementedException();
         }
     }
 }

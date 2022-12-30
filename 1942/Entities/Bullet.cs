@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace _1942.Entities
 {
-    internal class Bullet : Entity, IUpdatable
+    public class Bullet : Entity, IUpdatable
     {
         private readonly Vector2 direction;
         private readonly Sprite bulletSprite;
 
-        internal float Speed { get; set; } = 0.5f;
+        public float Speed { get; set; } = 0.5f;
 
-        internal Bullet(Texture texture, Point initialPosition, Vector2 direction) : base()
+        public Bullet(Texture texture, Point initialPosition, Vector2 direction) : base()
         {
             Position = new Point(initialPosition.X - texture.Width / 2, initialPosition.Y);
 
@@ -28,7 +28,7 @@ namespace _1942.Entities
             this.direction = direction;
         }
 
-        internal bool IsOutsideWindow()
+        public bool IsOutsideWindow()
         {
             return Position.Y < 0;
         }

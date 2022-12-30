@@ -14,6 +14,7 @@ namespace Engine
 
         protected int FrameRate { get; set; } = 120;
         protected AudioManager Audio { get; private set; }
+        protected float FPS { get; private set; }
         protected GraphicsManager Graphics { get; private set; }
 
         public Game()
@@ -52,6 +53,8 @@ namespace Engine
 
             while (isRunning)
             {
+                ulong fpsStart = SDL_GetPerformanceCounter();
+
                 gameTime!.Update();
 
                 while (SDL_PollEvent(out events) != 0)
@@ -67,6 +70,10 @@ namespace Engine
                 Update(gameTime);
 
                 gameTime.LateUpdate();
+
+                ulong fpsEnd = SDL_GetPerformanceCounter();
+                float elapsed = (fpsEnd - fpsStart) / (float)SDL_GetPerformanceFrequency();
+                FPS = 1.0f / elapsed;
             }
         }
 

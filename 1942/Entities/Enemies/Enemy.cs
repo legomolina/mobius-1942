@@ -2,7 +2,7 @@
 
 namespace _1942.Entities.Enemies
 {
-    internal abstract class Enemy : Ship
+    public abstract class Enemy : Ship
     {
         protected readonly Player player;
 

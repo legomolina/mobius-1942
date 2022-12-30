@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace _1942.Entities
 {
-    internal abstract class Ship : Entity, IUpdatable, IDrawable, IDisposable
+    public abstract class Ship : Entity, IUpdatable, IDrawable, IDisposable
     {
         protected const int ANIMATION_FPS = 24;
 
@@ -71,11 +71,9 @@ namespace _1942.Entities
 
         protected abstract void Shoot();
 
+        // TODO review disposes
         public void Dispose()
         {
-            bulletTexture?.Dispose();
-            shipTexture?.Dispose();
-            shipSprite?.Dispose();
         }
     }
 }

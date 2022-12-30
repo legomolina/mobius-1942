@@ -16,9 +16,6 @@
     <None Update="Assets\Effects\bullet_shot.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Enemies\enemy_1.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Assets\Maps\test_level.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

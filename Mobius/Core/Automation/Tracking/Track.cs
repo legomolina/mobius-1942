@@ -41,5 +41,30 @@ namespace Engine.Core.Automation.Tracking
             this.currentWaypointIndex = currentIndex;
             this.waypoints = waypoints;
         }
+
+        public void MoveNextWaypoint()
+        {
+            if (!Loop && currentWaypointIndex >= waypoints.Count)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            currentWaypointIndex++;
+        }
+
+        public void MovePreviousWaypoint()
+        {
+            if (currentWaypointIndex == 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            currentWaypointIndex--;
+        }
+
+        public bool IsLastWaypoint()
+        {
+            return currentWaypointIndex >= waypoints.Count - 1;
+        }
     }
 }

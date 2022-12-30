@@ -4,25 +4,38 @@ using Engine;
 using Engine.Components;
 using Engine.Core;
 using Engine.Core.Math;
+using System;
 
 namespace _1942
 {
-    internal class Game1942 : Game
+    public class Game1942 : Game
     {
         private readonly InputManager inputManager;
         private readonly Player player;
 
-        private Fighter fighter;
+        private IList<Fighter> fighters;
+
         private Sprite? background;
 
-        internal Game1942() : base()
+        public Game1942() : base()
         {
             Graphics.WindowWidth = 512;
             Graphics.WindowHeight = 800;
 
             inputManager = InputManager.Instance;
             player = new Player(Graphics);
-            fighter = new(Graphics, player);
+            player.Position = new Point(Graphics.WindowWidth / 2 - player.Width / 2, Graphics.WindowHeight - player.Height);
+            fighters = new List<Fighter>()
+            {
+                new(Graphics, player),
+                new(Graphics, player),
+                new(Graphics, player),
+                new(Graphics, player),
+                new(Graphics, player),
+                new(Graphics, player),
+                new(Graphics, player),
+                new(Graphics, player),
+            };
         }
 
         public override void LoadContent(AssetManager assetManager)
@@ -32,9 +45,11 @@ namespace _1942
 
             base.LoadContent(assetManager);
             player.LoadContent(assetManager);
-            fighter.LoadContent(assetManager);
-
-            player.Position = new Point(Graphics.WindowWidth / 2 - player.Width / 2, Graphics.WindowHeight - player.Height);
+            
+            foreach(Fighter fighter in fighters)
+            { 
+                fighter.LoadContent(assetManager);
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -44,13 +59,16 @@ namespace _1942
             inputManager.Update(gameTime);
             player.Update(gameTime);
 
-            if (fighter.Health > 0)
+            foreach (Fighter fighter in fighters)
             {
-                fighter.Update(gameTime);
-            } 
-            else
-            {
-                fighter.Dispose();
+                if (fighter.Health > 0)
+                {
+                    fighter.Update(gameTime);
+                }
+                else
+                {
+                    fighter.Dispose();
+                }
             }
         }
 
@@ -63,12 +81,22 @@ namespace _1942
             background!.Render();
             player.Render();
 
-            if (fighter.Health > 0)
+            foreach (Fighter fighter in fighters)
             {
-                fighter.Render();
+                if (fighter.Health > 0)
+                {
+                    fighter.Render();
+                }
+                else
+                {
+                    fighter.Dispose();
+                }
             }
 
             Graphics.Render();
+
+            // Show FPS in console
+            // Console.WriteLine(Math.Truncate(FPS).ToString());
         }
     }
 }
