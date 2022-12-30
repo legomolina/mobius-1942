@@ -26,11 +26,10 @@ namespace _1942.Entities.Enemies
             Point endPosition = new(graphics.WindowWidth - startPosition.X, startPosition.Y);
             Point playerPosition = player.Area.GetRandomPoint(AreaQuadrants.TopLeft | AreaQuadrants.TopRight);
 
-            Console.WriteLine(playerPosition);
-
             Track = new TrackFactory()
                 .Begin(startPosition)
                 .AddWaypoint(playerPosition)
+                .ShootPlayer()
                 .AddWaypoint(endPosition)
                 .Build();
         }
@@ -65,6 +64,11 @@ namespace _1942.Entities.Enemies
 
             if (distanceToDestination < 20)
             {
+                if (Track.NextWaypoint.Shoot)
+                {
+                    Shoot();
+                }
+
                 Track.MoveNextWaypoint();
             }
 
@@ -87,7 +91,7 @@ namespace _1942.Entities.Enemies
             Bullet bullet = new Bullet(bulletTexture, Position, direction)
             {
                 Rotation = rotation,
-                Speed = 0.2f,
+                Speed = 0.05f,
             };
 
             bullets.Add(bullet);

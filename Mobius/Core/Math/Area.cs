@@ -84,6 +84,7 @@ namespace Engine.Core.Math
         {
             AreaQuadrants[] selectedQuadrants = Enum.GetValues(typeof(AreaQuadrants))
                 .Cast<AreaQuadrants>()
+                .Where(q => q != AreaQuadrants.None)
                 .Where(q => (quadrants & q) == q)
                 .ToArray();
 

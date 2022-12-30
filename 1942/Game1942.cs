@@ -24,7 +24,7 @@ namespace _1942
 
             inputManager = InputManager.Instance;
             player = new Player(Graphics);
-            player.Position = new Point(Graphics.WindowWidth / 2 - player.Width / 2, Graphics.WindowHeight - player.Height);
+            player.Position = new Point(450, 450); //new Point(Graphics.WindowWidth / 2 - player.Width / 2, Graphics.WindowHeight - player.Height);
             fighters = new List<Fighter>()
             {
                 new(Graphics, player),

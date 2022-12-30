@@ -6,6 +6,7 @@ namespace Engine.Core.Automation.Tracking
     public class Waypoint
     {
         public Point Position { get; set; }
+        public bool Shoot { get; set; }
 
         public Waypoint()
         {

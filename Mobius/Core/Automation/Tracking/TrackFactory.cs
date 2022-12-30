@@ -42,6 +42,18 @@ namespace Engine.Core.Automation.Tracking
             return this;
         }
 
+        public TrackFactory ShootPlayer()
+        {
+            if (track == null || track.Waypoints.Count == 0)
+            {
+                throw new TrackNotInitializedException("ShootPlayer");
+            }
+
+            track.Waypoints.Last().Shoot = true;
+
+            return this;
+        }
+
         public Track Build(bool loop = false)
         {
             if (track == null)
