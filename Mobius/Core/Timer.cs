@@ -9,7 +9,9 @@ namespace Engine.Core
 {
     public class Timer
     {
-        private float startTime;
+        private uint startTime = 0;
+
+        public uint ElapsedTime => SDL_GetTicks() - startTime;
 
         public Timer()
         {
@@ -19,11 +21,6 @@ namespace Engine.Core
         public void Start()
         {
             startTime = SDL_GetTicks();
-        }
-
-        public float ElapsedTime()
-        {
-            return SDL_GetTicks() - startTime;
         }
 
         public void Reset()

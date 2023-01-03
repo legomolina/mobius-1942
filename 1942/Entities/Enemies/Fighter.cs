@@ -11,27 +11,13 @@ namespace _1942.Entities.Enemies
         private const string TextureFilename = "Assets/Textures/fighter.png";
         private const string BulletTextureFilename = "Assets/Textures/bullet.png";
 
-        public Track Track { get; set; }
+        public Track Track { get; private set; }
 
         public Fighter(GraphicsManager graphics, Player player) : base(graphics, player)
         {
             CreateTrack();
             Health = 50;
             Speed = 0.25f;
-        }
-
-        private void CreateTrack()
-        {
-            Point startPosition = new(CalculateInitX(), -50);
-            Point endPosition = new(graphics.WindowWidth - startPosition.X, startPosition.Y);
-            Point playerPosition = player.Area.GetRandomPoint(AreaQuadrants.TopLeft | AreaQuadrants.TopRight);
-
-            Track = new TrackFactory()
-                .Begin(startPosition)
-                .AddWaypoint(playerPosition)
-                .ShootPlayer()
-                .AddWaypoint(endPosition)
-                .Build();
         }
 
         public override void LoadContent(AssetManager assetManager)
@@ -51,6 +37,11 @@ namespace _1942.Entities.Enemies
 
         public override void Update(GameTime gameTime)
         {
+            if (!Active)
+            {
+                return;
+            }
+
             base.Update(gameTime);
 
             if (Track.IsLastWaypoint())
@@ -78,6 +69,11 @@ namespace _1942.Entities.Enemies
 
         public override void Render()
         {
+            if (!Active)
+            {
+                return;
+            }
+
             base.Render();
 
             DebugManager.RenderTrack(Track);
@@ -88,7 +84,7 @@ namespace _1942.Entities.Enemies
             Vector2 direction = Vector2.FromPoints(Center, player.Center);
             float rotation = new Vector2(0, 1).AngleBetween(direction / direction.Magnitude()) * -1;
 
-            Bullet bullet = new Bullet(bulletTexture, Position, direction)
+            Bullet bullet = new(bulletTexture, Position, direction)
             {
                 Rotation = rotation,
                 Speed = 0.05f,
@@ -97,9 +93,23 @@ namespace _1942.Entities.Enemies
             bullets.Add(bullet);
         }
 
+        private void CreateTrack()
+        {
+            Point startPosition = new(CalculateInitX(), -50);
+            Point endPosition = new(graphics.WindowWidth - startPosition.X, startPosition.Y);
+            Point playerPosition = player.Area.GetRandomPoint(AreaQuadrants.TopLeft | AreaQuadrants.TopRight);
+
+            Track = new TrackFactory()
+                .Begin(startPosition)
+                .AddWaypoint(playerPosition)
+                .ShootPlayer()
+                .AddWaypoint(endPosition)
+                .Build();
+        }
+
         private int CalculateInitX()
         {
-            Random random = new Random();
+            Random random = new();
             int side = random.Next(0, 2);
             int min, max;
 

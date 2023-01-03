@@ -6,11 +6,18 @@ namespace _1942.Entities.Enemies
     {
         protected readonly Player player;
 
-        protected Engine.Core.Timer timer = new();
+        public bool Initialized = false;
 
         protected Enemy(GraphicsManager graphics, Player player) : base(graphics)
         {
+            Active = false;
             this.player = player;
+        }
+
+        public virtual void Initialize()
+        {
+            Active = true;
+            Initialized= true;
         }
     }
 }
