@@ -8,9 +8,9 @@ namespace _1942.Entities
 {
     public class Player : Ship
     {
-        private const string BULLET_TEXTURE_FILENAME = "Assets/Textures/bullet.png";
-        private const string BULLET_SOUND_FILENAME = "Assets/Effects/bullet_shot.wav";
-        private const string PLAYER_TEXTURE_FILENAME = "Assets/Textures/player.png";
+        private const string BulletTextureFilename = "Assets/Textures/bullet.png";
+        private const string BulletSound = "Assets/Effects/bullet_shot.wav";
+        private const string PlayerTextureFilename = "Assets/Textures/player.png";
 
         public Area Area => new(this, 50);
 
@@ -23,9 +23,9 @@ namespace _1942.Entities
 
         public override void LoadContent(AssetManager assetManager)
         {
-            bulletTexture = assetManager.LoadTexture(BULLET_TEXTURE_FILENAME);
-            shipTexture = assetManager.LoadTexture(PLAYER_TEXTURE_FILENAME);
-            shootSound = assetManager.LoadSoundEffect(BULLET_SOUND_FILENAME);
+            bulletTexture = assetManager.LoadTexture(BulletTextureFilename);
+            shipTexture = assetManager.LoadTexture(BulletSound);
+            shootSound = assetManager.LoadSoundEffect(PlayerTextureFilename);
             shootSound.SetVolume(15);
 
             shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.HORIZONTAL)

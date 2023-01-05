@@ -10,20 +10,31 @@ namespace _1942.Entities.Enemies
     {
         private const string TextureFilename = "Assets/Textures/fighter.png";
         private const string BulletTextureFilename = "Assets/Textures/bullet.png";
+        private const string BulletSoundFilename = "Assets/Effects/bullet_shot.wav";
 
         public Track Track { get; private set; }
 
         public Fighter(GraphicsManager graphics, Player player) : base(graphics, player)
         {
-            CreateTrack();
             Health = 50;
-            Speed = 0.25f;
+            Speed = 0.2f;
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            CreateTrack();
+
+            Position = Track.Waypoints[0].Position;
         }
 
         public override void LoadContent(AssetManager assetManager)
         {
             bulletTexture = assetManager.LoadTexture(BulletTextureFilename);
             shipTexture = assetManager.LoadTexture(TextureFilename);
+            shootSound = assetManager.LoadSoundEffect(BulletSoundFilename);
+            shootSound.SetVolume(15);
             shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.HORIZONTAL)
             {
                 AnimationFPS = ANIMATION_FPS
@@ -31,8 +42,6 @@ namespace _1942.Entities.Enemies
 
             Width = ((AnimatedSprite)shipSprite).FrameWidth;
             Height = ((AnimatedSprite)shipSprite).FrameHeight;
-
-            Position = Track.CurrentWaypoint.Position + new Point(-Width / 2, -Height / 2);
         }
 
         public override void Update(GameTime gameTime)
@@ -87,9 +96,10 @@ namespace _1942.Entities.Enemies
             Bullet bullet = new(bulletTexture, Position, direction)
             {
                 Rotation = rotation,
-                Speed = 0.05f,
+                Speed = 0.1f,
             };
 
+            shootSound!.Play(1, 0);
             bullets.Add(bullet);
         }
 
