@@ -10,6 +10,7 @@ namespace _1942.Entities
 {
     public abstract class Entity : GameComponent
     {
+        public Rectangle Bounds => new Rectangle(Position.X, Position.Y, Width, Height);
         public Point Center
         {
             get

@@ -45,7 +45,7 @@ namespace _1942.Entities
             {
                 bullet.Update(gameTime);
 
-                if (bullet.IsOutsideWindow())
+                if (bullet.IsOutsideWindow() || !bullet.Active)
                 {
                     bullets.Remove(bullet);
                 }
@@ -67,6 +67,11 @@ namespace _1942.Entities
             {
                 bullet.Render();
             }
+        }
+
+        public virtual void Destroy()
+        {
+            Health = 0;
         }
 
         protected abstract void Shoot();

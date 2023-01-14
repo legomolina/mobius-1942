@@ -24,12 +24,12 @@ namespace _1942
 
             enemyManager = new EnemyManager();
             inputManager = InputManager.Instance;
-            player = new Player(Graphics);
+            player = new Player(Graphics, enemyManager);
             player.Position = new Point(Graphics.WindowWidth / 2 - player.Width / 2, Graphics.WindowHeight - player.Height);
 
-            enemyManager.AddEnemy(new Fighter(Graphics, player), 7);
+            enemyManager.AddEnemy(new Fighter(Graphics, player), 2);
             enemyManager.AddEnemyRelative(new Fighter(Graphics, player), 2);
-            enemyManager.AddEnemyRelative(new Fighter(Graphics, player), 5);
+            enemyManager.AddEnemyRelative(new Fighter(Graphics, player), 2);
         }
 
         public override void LoadContent(AssetManager assetManager)
@@ -49,7 +49,12 @@ namespace _1942
             base.Update(gameTime);
 
             inputManager.Update(gameTime);
-            player.Update(gameTime);
+
+            if (player.Health > 0)
+            {
+                player.Update(gameTime);
+            }
+
             enemyManager.Update(gameTime);
         }
 
@@ -60,13 +65,18 @@ namespace _1942
             Graphics!.ClearBackBuffer();
 
             background!.Render();
-            player.Render();
+
+            if (player.Health > 0)
+            {
+                player.Render();
+            }
+            
             enemyManager.Render();
 
             Graphics.Render();
 
             // Show FPS in console
-            // Console.WriteLine(Math.Truncate(FPS).ToString());
+            Console.WriteLine(Math.Truncate(FPS).ToString());
         }
     }
 }

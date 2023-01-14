@@ -26,6 +26,22 @@ namespace Engine.Core.Math
             Height = h;
         }
 
+        public bool Contains(Rectangle rect) 
+        {
+            return (X <= rect.X) &&
+                ((rect.X + rect.Width) <= (X + Width)) &&
+                (Y <= rect.Y) &&
+                ((rect.Y + rect.Height) <= (Y + Height));
+        }
+
+        public bool Intersects(Rectangle rect)
+        {
+            return (rect.X < X + Width) &&
+                (X < (rect.X + rect.Width)) &&
+                (rect.Y < Y + Height) &&
+                (Y < rect.Y + rect.Height);
+        }
+
         public override string ToString()
         {
             return $"x: {X}, y: {Y}, w: {Width}, h: {Height}";

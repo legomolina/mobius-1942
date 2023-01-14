@@ -15,6 +15,7 @@ namespace _1942.Entities
         private readonly Sprite bulletSprite;
 
         public float Speed { get; set; } = 0.5f;
+        public Ship[] Targets { get; set; }
 
         public Bullet(Texture texture, Point initialPosition, Vector2 direction) : base()
         {
@@ -35,12 +36,31 @@ namespace _1942.Entities
 
         public override void Render()
         {
+            if (!Active)
+            {
+                return;
+            }
+
             bulletSprite.Rotation = Rotation;
             bulletSprite.Render();
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (!Active)
+            {
+                return;
+            }
+
+            foreach(Ship ship in Targets)
+            {
+                if (Bounds.Intersects(ship.Bounds))
+                {
+                    ship.Destroy();
+                    Active = false;
+                }
+            }
+
             Vector2 velocity = direction.Normalized() * Speed * gameTime.DeltaTime;
             Point endPosition = (bulletSprite.Position.ToVector() + velocity).ToPoint();
             bulletSprite.Position = endPosition;

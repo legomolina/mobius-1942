@@ -85,7 +85,9 @@ namespace _1942.Entities.Enemies
 
             base.Render();
 
-            DebugManager.RenderTrack(Track);
+#if DEBUG
+            DebugManager.DrawTrack(Track);
+#endif
         }
 
         protected override void Shoot()
@@ -97,6 +99,7 @@ namespace _1942.Entities.Enemies
             {
                 Rotation = rotation,
                 Speed = 0.1f,
+                Targets = new Ship[] { player },
             };
 
             shootSound!.Play(1, 0);

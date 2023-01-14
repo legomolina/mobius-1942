@@ -3,29 +3,36 @@ using Engine.Core.Math;
 using Engine.Components;
 using System.Diagnostics;
 using Engine.Core.Debug;
+using _1942.Entities.Enemies;
+using _1942.Managers;
 
 namespace _1942.Entities
 {
     public class Player : Ship
     {
-        private const string BulletTextureFilename = "Assets/Textures/bullet.png";
-        private const string BulletSound = "Assets/Effects/bullet_shot.wav";
-        private const string PlayerTextureFilename = "Assets/Textures/player.png";
+        private const string BULLET_TEXTURE_FILENAME = "Assets/Textures/bullet.png";
+        private const string BULLET_SOUND_FILENAME = "Assets/Effects/bullet_shot.wav";
+        private const string PLAYER_TEXTURE_FILENAME = "Assets/Textures/player.png";
+
+        private readonly EnemyManager enemyManager;
 
         public Area Area => new(this, 50);
 
-        public Player(GraphicsManager graphics) : base(graphics)
+        public Player(GraphicsManager graphics, EnemyManager enemyManager) : base(graphics)
         {
+            this.enemyManager = enemyManager;
+
             Width = 32;
             Height = 32;
             Speed = 0.25f;
+            Health = 50;
         }
 
         public override void LoadContent(AssetManager assetManager)
         {
-            bulletTexture = assetManager.LoadTexture(BulletTextureFilename);
-            shipTexture = assetManager.LoadTexture(BulletSound);
-            shootSound = assetManager.LoadSoundEffect(PlayerTextureFilename);
+            bulletTexture = assetManager.LoadTexture(BULLET_TEXTURE_FILENAME);
+            shipTexture = assetManager.LoadTexture(PLAYER_TEXTURE_FILENAME);
+            shootSound = assetManager.LoadSoundEffect(BULLET_SOUND_FILENAME);
             shootSound.SetVolume(15);
 
             shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.HORIZONTAL)
@@ -80,8 +87,6 @@ namespace _1942.Entities
         public override void Render()
         {
             base.Render();
-
-            DebugManager.RenderRectangle(Area.ToRectangle());
         }
 
         private void MoveTo(Vector2 velocity)
@@ -96,7 +101,10 @@ namespace _1942.Entities
         protected override void Shoot()
         {
             Point startPosition = new(Position.X + Width / 2 - bulletTexture!.Width / 2, Position.Y - 5);
-            Bullet bullet = new(bulletTexture!, startPosition, new Vector2(0, -1));
+            Bullet bullet = new(bulletTexture!, startPosition, new Vector2(0, -1))
+            {
+                Targets = enemyManager.Enemies,
+            };
 
             shootSound!.Play(1, 0);
             bullets.Add(bullet);

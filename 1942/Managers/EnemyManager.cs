@@ -9,6 +9,8 @@ namespace _1942.Managers
         private readonly Dictionary<Enemy, int> enemies = new Dictionary<Enemy, int>();
         private readonly Engine.Core.Timer timer = new();
 
+        public Enemy[] Enemies => enemies.Keys.ToArray();
+
         public EnemyManager()
         {
         }
@@ -46,7 +48,10 @@ namespace _1942.Managers
         {
             foreach (KeyValuePair<Enemy, int> entry in enemies)
             {
-                entry.Key.Render();
+                if (entry.Key.Health > 0)
+                {
+                    entry.Key.Render();
+                }
             }
         }
 
@@ -59,7 +64,10 @@ namespace _1942.Managers
                     entry.Key.Initialize();
                 }
 
-                entry.Key.Update(gameTime);
+                if (entry.Key.Health > 0)
+                {
+                    entry.Key.Update(gameTime);
+                }
             }
         }
     }
