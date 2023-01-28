@@ -8,6 +8,7 @@ namespace Engine.Components
         private float rotation = 0;
 
         public bool Active { get; set; } = true;
+        public int Order { get; set; } = 1;
         public Point Position { get; set; }
         public float Rotation
         {

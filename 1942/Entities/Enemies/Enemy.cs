@@ -1,5 +1,5 @@
 ﻿using Engine.Core;
-using Engine.Core.Debug;
+using Engine.Core.Managers;
 using System.Transactions;
 
 namespace _1942.Entities.Enemies

@@ -1,15 +1,18 @@
 ﻿using _1942.Entities.Enemies;
+using Engine.Components;
 using Engine.Core;
+using Engine.Core.Managers;
 using System.Collections.Generic;
 
 namespace _1942.Managers
 {
-    public class EnemyManager : IDrawable, IUpdatable
+    public class EnemyManager : GameComponent, IDrawable
     {
         private readonly Dictionary<Enemy, int> enemies = new Dictionary<Enemy, int>();
         private readonly Engine.Core.Timer timer = new();
 
         public Enemy[] Enemies => enemies.Keys.ToArray();
+        public int Order { get; set; } = 1;
 
         public EnemyManager()
         {
@@ -31,7 +34,7 @@ namespace _1942.Managers
             enemies.Add(enemy, lastTime + time);
         }
 
-        public void Initialize()
+        public void Start()
         {
             timer.Start();
         }
@@ -44,7 +47,7 @@ namespace _1942.Managers
             }
         }
 
-        public void Render()
+        public override void Render()
         {
             foreach (KeyValuePair<Enemy, int> entry in enemies)
             {
@@ -55,7 +58,7 @@ namespace _1942.Managers
             }
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             foreach (KeyValuePair<Enemy, int> entry in enemies)
             {

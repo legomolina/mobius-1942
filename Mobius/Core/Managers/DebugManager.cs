@@ -2,7 +2,7 @@
 using Engine.Core.Math;
 using Engine.Core.Automation.Tracking;
 
-namespace Engine.Core.Debug
+namespace Engine.Core.Managers
 {
     public static class DebugManager
     {
@@ -53,7 +53,7 @@ namespace Engine.Core.Debug
                 Waypoint next = track.Waypoints[i + 1];
 
 #if DEBUG
-                DebugManager.DrawLine(current.Position, next.Position);
+                DrawLine(current.Position, next.Position);
 #endif
             }
         }

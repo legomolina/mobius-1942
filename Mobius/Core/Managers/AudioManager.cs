@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine.Exceptions;
 
-namespace Engine.Core
+namespace Engine.Core.Managers
 {
     public class AudioManager : IDisposable
     {

@@ -1,15 +1,11 @@
 ﻿using Engine.Components;
 using Engine.Core;
-using Engine.Core.Math;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Engine.Core.Managers;
+
 
 namespace _1942.Entities
 {
-    public abstract class Ship : Entity, IUpdatable, IDrawable, IDisposable
+    public abstract class Ship : Entity, IDrawable, IDisposable
     {
         protected const int ANIMATION_FPS = 24;
 
@@ -23,6 +19,8 @@ namespace _1942.Entities
         protected SoundEffect? shootSound;
         
         protected float Speed { get; set; }
+
+        public int Order { get; set; } = 1;
 
         protected Ship(GraphicsManager graphics) : base()
         {

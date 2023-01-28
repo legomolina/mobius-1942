@@ -1,6 +1,7 @@
 ﻿using static SDL2.SDL;
 using Engine.Core;
 using Engine.Core.Math;
+using Engine.Core.Managers;
 
 namespace Engine.Components
 {

@@ -1,6 +1,7 @@
 ﻿using static SDL2.SDL;
 using Engine.Core;
 using Engine.Exceptions;
+using Engine.Core.Managers;
 
 namespace Engine
 {
@@ -45,10 +46,14 @@ namespace Engine
             SDL_Quit();
         }
 
+        public virtual void Initialize() { }
+
         public virtual void LoadContent(AssetManager assetManager) { }
 
         public void Run()
         {
+            Initialize();
+
             LoadContent(assetManager);
 
             while (isRunning)

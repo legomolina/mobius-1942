@@ -1,10 +1,8 @@
 ﻿using Engine.Core;
 using Engine.Core.Math;
 using Engine.Components;
-using System.Diagnostics;
-using Engine.Core.Debug;
-using _1942.Entities.Enemies;
 using _1942.Managers;
+using Engine.Core.Managers;
 
 namespace _1942.Entities
 {

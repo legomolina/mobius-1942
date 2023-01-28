@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Engine.Exceptions;
 using System.Runtime.InteropServices;
 
-namespace Engine.Core
+namespace Engine.Core.Managers
 {
     public class GraphicsManager : IDisposable
     {
@@ -40,7 +40,7 @@ namespace Engine.Core
             set
             {
                 windowWidth = value;
-                
+
                 if (window != IntPtr.Zero)
                 {
                     SDL_SetWindowSize(window, windowWidth, windowHeight);

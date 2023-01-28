@@ -1,47 +1,39 @@
 ﻿using _1942.Entities;
-using _1942.Entities.Enemies;
 using _1942.Managers;
+using _1942.Stages;
 using Engine;
-using Engine.Components;
 using Engine.Core;
-using Engine.Core.Math;
-using System;
+using Engine.Core.Managers;
 
 namespace _1942
 {
     public class Game1942 : Game
     {
-        private readonly EnemyManager enemyManager;
         private readonly InputManager inputManager;
-        private readonly Player player;
-
-        private Sprite? background;
+        private readonly StageManager stageManager;
 
         public Game1942() : base()
         {
             Graphics.WindowWidth = 512;
             Graphics.WindowHeight = 800;
 
-            enemyManager = new EnemyManager();
-            inputManager = InputManager.Instance;
-            player = new Player(Graphics, enemyManager);
-            player.Position = new Point(Graphics.WindowWidth / 2 - player.Width / 2, Graphics.WindowHeight - player.Height);
+            stageManager = new StageManager();
 
-            enemyManager.AddEnemy(new Fighter(Graphics, player), 2);
-            enemyManager.AddEnemyRelative(new Fighter(Graphics, player), 2);
-            enemyManager.AddEnemyRelative(new Fighter(Graphics, player), 2);
+            Level1 level1 = new Level1(Graphics);
+            stageManager.PushStage(level1);
+            
+            inputManager = InputManager.Instance;
+        }
+
+        public override void Initialize()
+        {
+            stageManager.PeekStage().Initialize();
         }
 
         public override void LoadContent(AssetManager assetManager)
         {
-            Texture background = assetManager.LoadTexture("Assets/Maps/test_level.png");
-            this.background = new Sprite(background);
-
-            enemyManager.LoadContent(assetManager);
-            enemyManager.Initialize();
-
             base.LoadContent(assetManager);
-            player.LoadContent(assetManager);
+            stageManager.PeekStage().LoadContent(assetManager);
         }
 
         public override void Update(GameTime gameTime)
@@ -49,13 +41,7 @@ namespace _1942
             base.Update(gameTime);
 
             inputManager.Update(gameTime);
-
-            if (player.Health > 0)
-            {
-                player.Update(gameTime);
-            }
-
-            enemyManager.Update(gameTime);
+            stageManager.PeekStage().Update(gameTime);
         }
 
         public override void Render()
@@ -64,14 +50,7 @@ namespace _1942
 
             Graphics!.ClearBackBuffer();
 
-            background!.Render();
-
-            if (player.Health > 0)
-            {
-                player.Render();
-            }
-            
-            enemyManager.Render();
+            stageManager.PeekStage().Render();
 
             Graphics.Render();
 

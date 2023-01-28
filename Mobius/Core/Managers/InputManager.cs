@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace Engine.Core
+namespace Engine.Core.Managers
 {
     public enum Keyboard
     {
@@ -106,7 +106,7 @@ namespace Engine.Core
             previousKeyboardState = keyboardState;
 
             IntPtr keyboard = SDL_GetKeyboardState(out int arraySize);
-            
+
             keyboardState = new byte[arraySize];
             Marshal.Copy(keyboard, keyboardState, 0, arraySize);
         }

@@ -1,7 +1,7 @@
 ﻿using Engine.Components;
 using Engine.Core;
 using Engine.Core.Automation.Tracking;
-using Engine.Core.Debug;
+using Engine.Core.Managers;
 using Engine.Core.Math;
 
 namespace _1942.Entities.Enemies

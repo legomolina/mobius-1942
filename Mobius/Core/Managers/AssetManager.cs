@@ -1,7 +1,7 @@
 ﻿using Engine.Components;
 using Engine.Exceptions;
 
-namespace Engine.Core
+namespace Engine.Core.Managers
 {
     public class AssetManager
     {
