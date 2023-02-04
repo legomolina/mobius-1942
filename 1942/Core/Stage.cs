@@ -8,12 +8,14 @@ namespace _1942.Core
 {
     public abstract class Stage : IUpdatable
     {
+        public bool Active { get; set; }
         public ObservableCollection<GameComponent> Components { get; private set; }
 
         protected IList<GameComponent> sortedComponents;
 
         public Stage()
         {
+            Active = true;
             Components = new ObservableCollection<GameComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
             sortedComponents = new List<GameComponent>();

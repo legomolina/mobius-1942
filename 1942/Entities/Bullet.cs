@@ -52,6 +52,8 @@ namespace _1942.Entities
                 return;
             }
 
+            Targets = Targets.Where(ship => ship.Active && ship.Health > 0).ToArray();
+
             foreach(Ship ship in Targets)
             {
                 if (Bounds.Intersects(ship.Bounds))

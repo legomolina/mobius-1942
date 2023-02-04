@@ -1,5 +1,6 @@
 ﻿using _1942.Core;
 using _1942.Entities;
+using _1942.Entities.Effects;
 using _1942.Entities.Enemies;
 using _1942.Managers;
 using Engine.Components;
@@ -20,16 +21,16 @@ namespace _1942.Stages
         {
             this.enemyManager = new EnemyManager();
             this.graphics = graphics;
-            this.player = new Player(graphics, enemyManager);
+            this.player = new Player(graphics, enemyManager, this);
         }
 
         public override void Initialize()
         {
             player.Position = new Point(graphics.WindowWidth / 2 - player.Width / 2, graphics.WindowHeight - player.Height);
 
-            enemyManager.AddEnemy(new Fighter(graphics, player), 2);
-            enemyManager.AddEnemyRelative(new Fighter(graphics, player), 1);
-            enemyManager.AddEnemyRelative(new Fighter(graphics, player), 1);
+            enemyManager.AddEnemy(new Fighter(graphics, player, this), 2);
+            enemyManager.AddEnemyRelative(new Fighter(graphics, player, this), 1);
+            enemyManager.AddEnemyRelative(new Fighter(graphics, player, this), 1);
         }
 
         public override void LoadContent(AssetManager assetManager)

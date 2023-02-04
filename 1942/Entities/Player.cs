@@ -3,6 +3,7 @@ using Engine.Core.Math;
 using Engine.Components;
 using _1942.Managers;
 using Engine.Core.Managers;
+using _1942.Core;
 
 namespace _1942.Entities
 {
@@ -16,7 +17,7 @@ namespace _1942.Entities
 
         public Area Area => new(this, 50);
 
-        public Player(GraphicsManager graphics, EnemyManager enemyManager) : base(graphics)
+        public Player(GraphicsManager graphics, EnemyManager enemyManager, Stage stage) : base(graphics, stage)
         {
             this.enemyManager = enemyManager;
 
@@ -28,12 +29,14 @@ namespace _1942.Entities
 
         public override void LoadContent(AssetManager assetManager)
         {
+            base.LoadContent(assetManager);
+
             bulletTexture = assetManager.LoadTexture(BULLET_TEXTURE_FILENAME);
             shipTexture = assetManager.LoadTexture(PLAYER_TEXTURE_FILENAME);
             shootSound = assetManager.LoadSoundEffect(BULLET_SOUND_FILENAME);
             shootSound.SetVolume(15);
 
-            shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.HORIZONTAL)
+            shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.Horizontal)
             {
                 AnimationFPS = ANIMATION_FPS,
             };
@@ -80,11 +83,6 @@ namespace _1942.Entities
             {
                 MoveTo(direction.Normalized() * Speed * gameTime.DeltaTime);
             }
-        }
-
-        public override void Render()
-        {
-            base.Render();
         }
 
         private void MoveTo(Vector2 velocity)

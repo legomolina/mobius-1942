@@ -5,8 +5,8 @@ namespace Engine.Components
 {
     public enum AnimationDirections
     {
-        HORIZONTAL,
-        VERTICAL
+        Horizontal,
+        Vertical
     }
 
     public class AnimatedSprite : Sprite, IUpdatable, IDisposable
@@ -20,6 +20,9 @@ namespace Engine.Components
         public int AnimationFPS { get; set; } = 30;
         public int FrameWidth { get; private set; } = 0;
         public int FrameHeight { get; private set; } = 0;
+        public bool Loop { get; set; } = true;
+
+        public event EventHandler<EventArgs> OnAnimationEnd;
 
         public AnimatedSprite(Texture texture, int framesCount, AnimationDirections direction) : base(texture)
         {
@@ -33,12 +36,12 @@ namespace Engine.Components
         {
             switch (direction)
             {
-                case AnimationDirections.HORIZONTAL:
+                case AnimationDirections.Horizontal:
                     FrameWidth = texture.Width / frames.Length;
                     FrameHeight = texture.Height;
                     break;
 
-                case AnimationDirections.VERTICAL:
+                case AnimationDirections.Vertical:
                     FrameWidth = texture.Width;
                     FrameHeight = texture.Height / frames.Length;
                     break;
@@ -50,11 +53,11 @@ namespace Engine.Components
 
                 switch (direction)
                 {
-                    case AnimationDirections.HORIZONTAL:
+                    case AnimationDirections.Horizontal:
                         frame = new Rectangle(i * FrameWidth, 0, FrameWidth, FrameHeight);
                         break;
 
-                    case AnimationDirections.VERTICAL:
+                    case AnimationDirections.Vertical:
                         frame = new Rectangle(0, i * FrameHeight, FrameWidth, FrameHeight);
                         break;
                 }
@@ -96,6 +99,12 @@ namespace Engine.Components
                 lastFrame += framesToUpdate;
                 lastFrame %= frames.Length;
                 lastUpdate = gameTime.CurrentTime;
+            }
+
+            if (!Loop && lastFrame == frames.Length - 1)
+            {
+                Active = false;
+                OnAnimationEnd?.Invoke(this, new EventArgs());
             }
         }
     }

@@ -71,6 +71,11 @@ namespace _1942.Managers
                 {
                     entry.Key.Update(gameTime);
                 }
+                else
+                {
+                    enemies.Remove(entry.Key);
+                    entry.Key.Dispose();
+                }
             }
         }
     }

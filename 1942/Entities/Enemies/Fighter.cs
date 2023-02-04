@@ -1,4 +1,5 @@
-﻿using Engine.Components;
+﻿using _1942.Core;
+using Engine.Components;
 using Engine.Core;
 using Engine.Core.Automation.Tracking;
 using Engine.Core.Managers;
@@ -14,7 +15,7 @@ namespace _1942.Entities.Enemies
 
         public Track Track { get; private set; }
 
-        public Fighter(GraphicsManager graphics, Player player) : base(graphics, player)
+        public Fighter(GraphicsManager graphics, Player player, Stage stage) : base(graphics, player, stage)
         {
             Health = 50;
             Speed = 0.2f;
@@ -31,11 +32,13 @@ namespace _1942.Entities.Enemies
 
         public override void LoadContent(AssetManager assetManager)
         {
+            base.LoadContent(assetManager);
+
             bulletTexture = assetManager.LoadTexture(BulletTextureFilename);
             shipTexture = assetManager.LoadTexture(TextureFilename);
             shootSound = assetManager.LoadSoundEffect(BulletSoundFilename);
             shootSound.SetVolume(15);
-            shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.HORIZONTAL)
+            shipSprite = new AnimatedSprite(shipTexture, 4, AnimationDirections.Horizontal)
             {
                 AnimationFPS = ANIMATION_FPS
             };

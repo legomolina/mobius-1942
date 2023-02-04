@@ -1,4 +1,5 @@
-﻿using Engine.Core;
+﻿using _1942.Core;
+using Engine.Core;
 using Engine.Core.Managers;
 using System.Transactions;
 
@@ -11,7 +12,7 @@ namespace _1942.Entities.Enemies
 
         public bool Initialized = false;
 
-        protected Enemy(GraphicsManager graphics, Player player) : base(graphics)
+        protected Enemy(GraphicsManager graphics, Player player, Stage stage) : base(graphics, stage)
         {
             Active = false;
             this.player = player;
