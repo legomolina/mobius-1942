@@ -11,13 +11,13 @@ namespace _1942.Managers
 {
     public class StageManager
     {
-        private Stack<Stage> stages = new Stack<Stage>();
+        private Stack<IStage> stages = new Stack<IStage>();
 
         public StageManager() 
         {
         }
 
-        public void PushStage(Stage stage)
+        public void PushStage(IStage stage)
         {
             stages.Push(stage);
         }
@@ -32,7 +32,7 @@ namespace _1942.Managers
             stages.Clear();
         }
 
-        public Stage PeekStage()
+        public IStage PeekStage()
         {
             return stages.Peek();
         }

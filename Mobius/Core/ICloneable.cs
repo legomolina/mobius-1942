@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine.Components
+namespace Engine.Core
 {
-    internal class Particle
+    public interface ICloneable<T>
     {
+        T Clone();
     }
 }

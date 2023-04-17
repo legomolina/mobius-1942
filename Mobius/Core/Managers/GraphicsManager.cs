@@ -1,5 +1,6 @@
 ﻿using static SDL2.SDL;
 using static SDL2.SDL_image;
+using static SDL2.SDL_ttf;
 
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine.Exceptions;
 using System.Runtime.InteropServices;
+using Engine.Core.Math;
 
 namespace Engine.Core.Managers
 {
@@ -33,6 +35,8 @@ namespace Engine.Core.Managers
                 return instance;
             }
         }
+
+        public Rectangle WindowBounds => new Rectangle(0, 0, windowWidth, windowHeight);
 
         public int WindowWidth
         {
@@ -105,6 +109,12 @@ namespace Engine.Core.Managers
                 return false;
             }
 
+            if (TTF_Init() < 0)
+            {
+                Console.WriteLine($"SDL TTF initialization error: {TTF_GetError()}");
+                return false;
+            }
+
             return true;
         }
 
@@ -155,6 +165,29 @@ namespace Engine.Core.Managers
         {
             SDL_SetRenderDrawColor(renderer, r, g, b, a);
             SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
+        }
+
+        internal void DrawText(int size, SDL_Color color, string text, SDL_Point point)
+        {
+            IntPtr font = TTF_OpenFont("Assets/Fonts/inter.ttf", size);
+
+            IntPtr surface = TTF_RenderText_Solid(font, text, color);
+            IntPtr texture = SDL_CreateTextureFromSurface(renderer, surface);
+            TTF_SizeText(font, text, out int textWidth, out int textHeight);
+
+            SDL_Rect renderRect = new SDL_Rect()
+            {
+                x = point.x,
+                y = point.y,
+                w = textWidth,
+                h = textHeight,
+            };
+
+            DrawTexture(texture, renderRect);
+
+            SDL_FreeSurface(surface);
+            SDL_DestroyTexture(texture);
+            TTF_CloseFont(font);
         }
 
         public void Dispose()

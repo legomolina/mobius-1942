@@ -13,6 +13,7 @@ namespace Engine
         private bool isRunning = true;
         private SDL_Event events;
 
+        protected BatchRenderer BatchRenderer { get; private set; }
         protected int FrameRate { get; set; } = 120;
         protected AudioManager Audio { get; private set; }
         protected float FPS { get; private set; }
@@ -35,6 +36,7 @@ namespace Engine
             }
 
             assetManager = new AssetManager(Graphics!, Audio!);
+            BatchRenderer = new BatchRenderer(Graphics);
             gameTime = new GameTime();
         }
 
@@ -82,7 +84,7 @@ namespace Engine
             }
         }
 
-        public virtual void Update(GameTime gameTime) { }
-        public virtual void Render() { }
+        public abstract void Update(GameTime gameTime);
+        public abstract void Render();
     }
 }

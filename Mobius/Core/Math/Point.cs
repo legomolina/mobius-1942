@@ -1,6 +1,8 @@
-﻿namespace Engine.Core.Math
+﻿using static SDL2.SDL;
+
+namespace Engine.Core.Math
 {
-    public struct Point
+    public struct Point : ICloneable<Point>
     {
         public float X { get; set; }
         public float Y { get; set; }
@@ -44,6 +46,11 @@
             return a.X != b.X || a.Y != b.Y;
         }
 
+        public Point Clone()
+        {
+            return new Point(X, Y);
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -57,6 +64,15 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        internal SDL_Point ToSDLPoint()
+        {
+            return new SDL_Point()
+            {
+                x = (int)X,
+                y = (int)Y,
+            };
         }
     }
 }

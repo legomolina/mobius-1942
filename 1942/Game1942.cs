@@ -19,7 +19,7 @@ namespace _1942
 
             stageManager = new StageManager();
 
-            Level1 level1 = new Level1(Graphics);
+            Level1 level1 = new Level1(Graphics, BatchRenderer);
             stageManager.PushStage(level1);
             
             inputManager = InputManager.Instance;
@@ -38,24 +38,20 @@ namespace _1942
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             inputManager.Update(gameTime);
             stageManager.PeekStage().Update(gameTime);
         }
 
         public override void Render()
         {
-            base.Render();
-
-            Graphics!.ClearBackBuffer();
+            BatchRenderer.Start();
 
             stageManager.PeekStage().Render();
 
-            Graphics.Render();
+            BatchRenderer.End();
 
             // Show FPS in console
-            Console.WriteLine(Math.Truncate(FPS).ToString());
+            // Console.WriteLine(Math.Truncate(FPS).ToString());
         }
     }
 }

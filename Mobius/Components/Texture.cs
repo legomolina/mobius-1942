@@ -79,8 +79,8 @@ namespace Engine.Components
             };
             SDL_Point centerPoint = new()
             {
-                x = (int)clipRectangle.Width / 2,
-                y = (int)clipRectangle.Height / 2,
+                x = (int)renderRectangle.Width / 2,
+                y = (int)renderRectangle.Height / 2,
             };
 
             graphics.DrawTexture(texture, renderRect, clipRect, rotation, centerPoint);

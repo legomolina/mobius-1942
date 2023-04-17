@@ -29,6 +29,16 @@ namespace Engine.Core.Math
         public Point BottomLeft => new(area.X, area.Y + area.Height);
         public Point BottomRight => new(area.X + area.Width, area.Y + area.Y + area.Height);
 
+        public Area(Point point, int padding)
+        {
+            area = new Rectangle(
+                point.X - padding,
+                point.Y - padding,
+                padding * 2,
+                padding * 2
+            );
+        }
+
         public Area(GameComponent component, int padding)
         {
             area = new Rectangle(

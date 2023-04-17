@@ -1,4 +1,6 @@
-﻿using System;
+﻿using static SDL2.SDL;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +28,11 @@ namespace Engine.Core.Math
             Height = h;
         }
 
+        public bool Contains(Point point)
+        {
+            return point.X >= X && point.X <= X + Width && point.Y >= Y && point.Y <= Y + Height;
+        }
+
         public bool Contains(Rectangle rect) 
         {
             return (X <= rect.X) &&
@@ -45,6 +52,17 @@ namespace Engine.Core.Math
         public override string ToString()
         {
             return $"x: {X}, y: {Y}, w: {Width}, h: {Height}";
+        }
+
+        internal SDL_Rect ToSDLRect()
+        {
+            return new SDL_Rect()
+            {
+                x = (int)X,
+                y = (int)Y,
+                w = (int)Width,
+                h = (int)Height,
+            };
         }
     }
 }

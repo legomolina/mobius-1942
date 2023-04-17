@@ -1,14 +1,14 @@
 ﻿using Engine.Core;
+using Engine.Core.Managers;
 using Engine.Core.Math;
 
 namespace Engine.Components
 {
-    public abstract class GameComponent : IUpdatable
+    public abstract class GameComponent : IDrawable, IUpdatable
     {
         private float rotation = 0;
 
         public bool Active { get; set; } = true;
-        public int Order { get; set; } = 1;
         public Point Position { get; set; }
         public float Rotation
         {
@@ -28,6 +28,7 @@ namespace Engine.Components
                 }
             }
         }
+        public int Order { get; set; }
         public float Scale { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
@@ -43,20 +44,10 @@ namespace Engine.Components
             Scale = scale;
         }
 
-        public virtual void Render() 
-        {
-            if (!Active)
-            {
-                return;
-            }
-        }
+        public abstract void LoadContent(AssetManager assetManager);
 
-        public virtual void Update(GameTime gameTime)
-        {
-            if (!Active)
-            {
-                return;
-            }
-        }
+        public abstract void Render();
+
+        public abstract void Update(GameTime gameTime);
     }
 }

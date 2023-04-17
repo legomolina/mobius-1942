@@ -1,27 +1,24 @@
-﻿using Engine.Core.Math;
+﻿using Engine.Core;
+using Engine.Core.Managers;
+using Engine.Core.Math;
 
 namespace Engine.Components
 {
-    public class Sprite : GameComponent, IDisposable
+    public class Sprite : GameComponent
     {
         protected readonly Texture texture;
 
-        protected Rectangle cropRectangle;
+        public Rectangle CropRectangle { get; set; }
 
         public Sprite(Texture texture) : this(texture, new Rectangle(0, 0, texture.Width, texture.Height)) { }
 
         public Sprite(Texture texture, Rectangle cropRectangle)
         {
-            this.cropRectangle = cropRectangle;
             this.texture = texture;
 
+            CropRectangle = cropRectangle;
             Width = texture.Width;
             Height = texture.Height;
-        }
-
-        public void Dispose()
-        {
-            texture.Dispose();
         }
 
         public override void Render()
@@ -39,7 +36,11 @@ namespace Engine.Components
                 Height = Height * Scale
             };
 
-            texture.Render(renderRectangle, cropRectangle, Rotation);
+            texture.Render(renderRectangle, CropRectangle, Rotation);
         }
+
+        public override void LoadContent(AssetManager assetManager) { }
+
+        public override void Update(GameTime gameTime) { }
     }
 }
