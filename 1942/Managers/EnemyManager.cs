@@ -88,8 +88,8 @@ namespace _1942.Managers
                 }
                 else if (!entry.Key.Active && entry.Key.Initialized)
                 {
-                    enemies.Remove(entry.Key);
                     collisionsContainer.Remove(entry.Key);
+                    enemies.Remove(entry.Key);
                 }
             }
         }

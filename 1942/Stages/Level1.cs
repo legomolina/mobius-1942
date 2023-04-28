@@ -12,17 +12,12 @@ namespace _1942.Stages
     {
         private readonly Background background;
         private readonly EnemyManager enemyManager;
-        private readonly GraphicsManager graphics;
         private readonly Player player;
-        private readonly BatchRenderer renderer;
 
-        public Level1(GraphicsManager graphics, BatchRenderer renderer) : base()
+        public Level1(GraphicsManager graphics, BatchRenderer renderer) : base(graphics, renderer)
         {
-            this.renderer = renderer;
-
             this.background = new Background("Assets/Maps/map.png", graphics, renderer);
             this.enemyManager = new EnemyManager(renderer, CollisionsContainer);
-            this.graphics = graphics;
             this.player = new Player(graphics, renderer, CollisionsContainer);
         }
 
@@ -30,20 +25,20 @@ namespace _1942.Stages
         {
             player.Position = new Point(graphics.WindowWidth / 2 - player.Width / 2, graphics.WindowHeight - player.Height);
 
-            enemyManager.AddEnemy(new Fighter(graphics, renderer, player, CollisionsContainer), 2);
-            enemyManager.AddEnemyRelative(new Fighter(graphics, renderer, player, CollisionsContainer), 1);
-            enemyManager.AddEnemyRelative(new Fighter(graphics, renderer, player, CollisionsContainer), 1);
-
             CollisionsContainer.Insert(player);
+
+            enemyManager.Start();
         }
 
         public override void LoadContent(AssetManager assetManager)
         {
+            enemyManager.AddEnemy(new Fighter(graphics, renderer, player, CollisionsContainer), 2);
+            enemyManager.AddEnemyRelative(new Fighter(graphics, renderer, player, CollisionsContainer), 1);
+            enemyManager.AddEnemyRelative(new Fighter(graphics, renderer, player, CollisionsContainer), 1);
+
             background.LoadContent(assetManager);
             enemyManager.LoadContent(assetManager);
             player.LoadContent(assetManager);
-
-            enemyManager.Start();
         }
 
         public override void Render()

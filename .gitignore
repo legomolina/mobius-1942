@@ -351,3 +351,6 @@ MigrationBackup/
 
 # VsCode
 .vscode/
+
+# Custom debug folder inside Engine project
+!Core/Debug

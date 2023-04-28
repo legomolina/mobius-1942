@@ -5,22 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using Engine.Core.Math;
 
 namespace Engine.Core.Managers
 {
     public enum Keyboard
     {
-        SPACE = 32,
-        NUM_0 = 48,
-        NUM_1,
-        NUM_2,
-        NUM_3,
-        NUM_4,
-        NUM_5,
-        NUM_6,
-        NUM_7,
-        NUM_8,
-        NUM_9,
+        Space = 32,
+        Num_0 = 48,
+        Num_1,
+        Num_2,
+        Num_3,
+        Num_4,
+        Num_5,
+        Num_6,
+        Num_7,
+        Num_8,
+        Num_9,
         A = 97,
         B,
         C,
@@ -47,10 +48,21 @@ namespace Engine.Core.Managers
         X,
         Y,
         Z,
-        RIGHT = 1073741903,
-        LEFT,
-        DOWN,
-        UP,
+        Right = 1073741903,
+        Left,
+        Down,
+        Up,
+    }
+
+    [Flags]
+    public enum MouseButtons
+    {
+        None = 0,
+        Left = 1,
+        Middle = 2,
+        Right = 4,
+        Button_4 = 8,
+        Button_5 = 16,
     }
 
     public class InputManager : IUpdatable
@@ -59,6 +71,8 @@ namespace Engine.Core.Managers
 
         private byte[]? keyboardState;
         private byte[]? previousKeyboardState;
+        private MouseButtons mouseState = MouseButtons.None;
+        private MouseButtons previousMouseState = MouseButtons.None;
 
         public static InputManager Instance
         {
@@ -72,6 +86,8 @@ namespace Engine.Core.Managers
                 return instance;
             }
         }
+
+        public Point MousePosition { get; private set; }
 
         private InputManager()
         {
@@ -101,14 +117,28 @@ namespace Engine.Core.Managers
             return previousKeyboardState[keyCode] == 1 && keyboardState[keyCode] == 0;
         }
 
+        public bool IsMouseButtonPressed(MouseButtons button)
+        {
+            return mouseState.HasFlag(button);
+        }
+
+        public bool IsMouseButtonReleased(MouseButtons button)
+        {
+            return previousMouseState.HasFlag(button) && !mouseState.HasFlag(button);
+        }
+
         public void Update(GameTime gameTime)
         {
             previousKeyboardState = keyboardState;
+            previousMouseState = mouseState;
 
             IntPtr keyboard = SDL_GetKeyboardState(out int arraySize);
-
             keyboardState = new byte[arraySize];
             Marshal.Copy(keyboard, keyboardState, 0, arraySize);
+
+            uint currentMouseState = SDL_GetMouseState(out int mouseX, out int mouseY);
+            MousePosition = new Point(mouseX, mouseY);
+            mouseState = (MouseButtons)currentMouseState;
         }
     }
 }

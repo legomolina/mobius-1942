@@ -12,28 +12,30 @@ namespace _1942
         private readonly InputManager inputManager;
         private readonly StageManager stageManager;
 
+        private MainMenu mainMenu;
+        private Level1 level1;
+
         public Game1942() : base()
         {
             Graphics.WindowWidth = 512;
             Graphics.WindowHeight = 800;
 
-            stageManager = new StageManager();
-
-            Level1 level1 = new Level1(Graphics, BatchRenderer);
-            stageManager.PushStage(level1);
-            
             inputManager = InputManager.Instance;
-        }
+            stageManager = new StageManager(this);
 
-        public override void Initialize()
-        {
-            stageManager.PeekStage().Initialize();
-        }
+            mainMenu = new MainMenu(Graphics, BatchRenderer);
+            level1 = new Level1(Graphics, BatchRenderer);
 
-        public override void LoadContent(AssetManager assetManager)
-        {
-            base.LoadContent(assetManager);
-            stageManager.PeekStage().LoadContent(assetManager);
+            stageManager.PushStage(mainMenu);
+
+            mainMenu.NewGame += (s, e) => 
+            {
+                stageManager.PushStage(level1);
+            };
+            mainMenu.QuitGame += (s, e) =>
+            {
+                Dispose();
+            };
         }
 
         public override void Update(GameTime gameTime)

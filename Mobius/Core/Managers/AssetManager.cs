@@ -1,5 +1,6 @@
 ﻿using Engine.Components;
 using Engine.Exceptions;
+using System.Runtime.InteropServices;
 
 namespace Engine.Core.Managers
 {
@@ -7,6 +8,7 @@ namespace Engine.Core.Managers
     {
         private readonly GraphicsManager graphicsManager;
         private readonly AudioManager audio;
+        private readonly Dictionary<string, Font> fonts = new();
         private readonly Dictionary<string, SoundEffect> soundEffects = new();
         private readonly Dictionary<string, Texture> textures = new();
 
@@ -14,6 +16,17 @@ namespace Engine.Core.Managers
         {
             this.graphicsManager = graphicsManager;
             audio = audioManager;
+        }
+
+        public Font LoadFont(string file)
+        {
+            if (!fonts.ContainsKey(file) || fonts[file] == null)
+            {
+                IntPtr fontPointer = graphicsManager.LoadFont(file, Font.DEFAULT_FONT_SIZE);
+                fonts[file] = new Font(graphicsManager, fontPointer, file);
+            }
+
+            return fonts[file];
         }
 
         public Texture LoadTexture(string file)

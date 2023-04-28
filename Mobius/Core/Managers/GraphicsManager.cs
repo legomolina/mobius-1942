@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Engine.Exceptions;
 using System.Runtime.InteropServices;
 using Engine.Core.Math;
+using Engine.Components;
 
 namespace Engine.Core.Managers
 {
@@ -128,6 +129,18 @@ namespace Engine.Core.Managers
             SDL_RenderPresent(renderer);
         }
 
+        internal IntPtr LoadFont(string file, int size)
+        {
+            IntPtr font = TTF_OpenFont(file, size);
+
+            if (font == IntPtr.Zero)
+            {
+                throw new FontCreatingException(file);
+            }
+
+            return font;
+        }
+
         internal IntPtr LoadTexture(string file)
         {
             IntPtr texture = IMG_LoadTexture(renderer, file);
@@ -165,6 +178,26 @@ namespace Engine.Core.Managers
         {
             SDL_SetRenderDrawColor(renderer, r, g, b, a);
             SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
+        }
+
+        internal void DrawText(Text text, SDL_Point point)
+        {
+            IntPtr surface = TTF_RenderText_Solid(text.Font.Pointer, text.Content, text.Font.Color.ToSDLColor());
+            IntPtr texture = SDL_CreateTextureFromSurface(renderer, surface);
+            text.MeasureString(out int width, out int height);
+
+            SDL_Rect renderRect = new SDL_Rect()
+            {
+                x = point.x,
+                y = point.y,
+                w = width,
+                h = height,
+            };
+
+            DrawTexture(texture, renderRect);
+
+            SDL_FreeSurface(surface);
+            SDL_DestroyTexture(texture);
         }
 
         internal void DrawText(int size, SDL_Color color, string text, SDL_Point point)

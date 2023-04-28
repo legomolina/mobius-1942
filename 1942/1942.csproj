@@ -22,6 +22,9 @@
     <None Update="Assets\Fonts\inter.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Textures\bg_menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Textures\bullet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -50,6 +53,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Textures\player.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Textures\UI\yellow_button_idle.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Textures\UI\yellow_button_pressed.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

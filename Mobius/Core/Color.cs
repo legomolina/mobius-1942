@@ -19,6 +19,8 @@ namespace Engine.Core
         public static Color Green => new(0, 255, 0);
         public static Color Blue => new(0, 0, 255);
         public static Color Yellow => new(255, 255, 0);
+        public static Color White => new(255, 255, 255);
+        public static Color Black => new(0, 0, 0);
         public static Color Transparent => new(0, 0, 0, 0);
 
         public Color() : this(0, 0, 0, 255) { }

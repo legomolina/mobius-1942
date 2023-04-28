@@ -30,60 +30,23 @@ namespace Engine.Components
 
         public void Render(Rectangle renderRectangle)
         {
-            SDL_Rect renderRect = new()
-            {
-                x = (int)renderRectangle.X,
-                y = (int)renderRectangle.Y,
-                w = (int)renderRectangle.Width,
-                h = (int)renderRectangle.Height
-            };
-
-            graphics.DrawTexture(texture, renderRect);
+            graphics.DrawTexture(texture, renderRectangle.ToSDLRect());
         }
 
         public void Render(Rectangle renderRectangle, Rectangle clipRectangle)
         {
-            SDL_Rect renderRect = new()
-            {
-                x = (int)renderRectangle.X,
-                y = (int)renderRectangle.Y,
-                w = (int)renderRectangle.Width,
-                h = (int)renderRectangle.Height
-            };
-            SDL_Rect clipRect = new()
-            {
-                x = (int)clipRectangle.X,
-                y = (int)clipRectangle.Y,
-                w = (int)clipRectangle.Width,
-                h = (int)clipRectangle.Height,
-            };
-
-            graphics.DrawTexture(texture, renderRect, clipRect);
+            graphics.DrawTexture(texture, renderRectangle.ToSDLRect(), clipRectangle.ToSDLRect());
         }
 
         public void Render(Rectangle renderRectangle, Rectangle clipRectangle, double rotation)
         {
-            SDL_Rect renderRect = new()
-            {
-                x = (int)renderRectangle.X,
-                y = (int)renderRectangle.Y,
-                w = (int)renderRectangle.Width,
-                h = (int)renderRectangle.Height
-            };
-            SDL_Rect clipRect = new()
-            {
-                x = (int)clipRectangle.X,
-                y = (int)clipRectangle.Y,
-                w = (int)clipRectangle.Width,
-                h = (int)clipRectangle.Height,
-            };
             SDL_Point centerPoint = new()
             {
                 x = (int)renderRectangle.Width / 2,
                 y = (int)renderRectangle.Height / 2,
             };
 
-            graphics.DrawTexture(texture, renderRect, clipRect, rotation, centerPoint);
+            graphics.DrawTexture(texture, renderRectangle.ToSDLRect(), clipRectangle.ToSDLRect(), rotation, centerPoint);
         }
 
         public void Dispose()

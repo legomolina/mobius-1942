@@ -24,8 +24,9 @@ namespace _1942.Entities.Ships
         protected Texture texture;
         protected Explosion explosion;
 
-        protected bool IsDestroyed { get; set; }
         protected float Speed { get; set; }
+
+        public bool IsDestroyed { get; protected set; }
 
         public Ship(GraphicsManager graphics, BatchRenderer renderer, CollisionsContainer collisionsContainer) : base(renderer)
         {

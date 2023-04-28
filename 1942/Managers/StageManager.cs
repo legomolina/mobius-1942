@@ -1,4 +1,5 @@
 ﻿using _1942.Core;
+using Engine;
 using Engine.Core;
 using Engine.Core.Managers;
 using System;
@@ -11,14 +12,19 @@ namespace _1942.Managers
 {
     public class StageManager
     {
-        private Stack<IStage> stages = new Stack<IStage>();
+        private readonly Game game;
+        private readonly Stack<IStage> stages = new Stack<IStage>();
 
-        public StageManager() 
+        public StageManager(Game game)
         {
+            this.game = game;
         }
 
         public void PushStage(IStage stage)
         {
+            stage.Initialize();
+            stage.LoadContent(game.AssetManager);
+
             stages.Push(stage);
         }
 

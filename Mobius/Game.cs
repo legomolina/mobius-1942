@@ -7,7 +7,6 @@ namespace Engine
 {
     public abstract class Game : IDisposable
     {
-        private readonly AssetManager assetManager;
         private readonly GameTime? gameTime;
 
         private bool isRunning = true;
@@ -18,6 +17,8 @@ namespace Engine
         protected AudioManager Audio { get; private set; }
         protected float FPS { get; private set; }
         protected GraphicsManager Graphics { get; private set; }
+
+        public AssetManager AssetManager { get; private set; }
 
         public Game()
         {
@@ -35,7 +36,7 @@ namespace Engine
                 throw new AudioNotInitializedException();
             }
 
-            assetManager = new AssetManager(Graphics!, Audio!);
+            AssetManager = new AssetManager(Graphics!, Audio!);
             BatchRenderer = new BatchRenderer(Graphics);
             gameTime = new GameTime();
         }
@@ -46,6 +47,7 @@ namespace Engine
             Graphics.Dispose();
 
             SDL_Quit();
+            isRunning = false;
         }
 
         public virtual void Initialize() { }
@@ -56,7 +58,7 @@ namespace Engine
         {
             Initialize();
 
-            LoadContent(assetManager);
+            LoadContent(AssetManager);
 
             while (isRunning)
             {

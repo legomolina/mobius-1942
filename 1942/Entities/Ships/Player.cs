@@ -121,33 +121,33 @@ namespace _1942.Entities.Ships
             InputManager input = InputManager.Instance;
 
             // Handle movement
-            if (input.IsKeyPressed(Keyboard.W) || input.IsKeyPressed(Keyboard.UP))
+            if (input.IsKeyPressed(Keyboard.W) || input.IsKeyPressed(Keyboard.Up))
             {
                 direction += new Vector2(0, -1);
             }
 
-            if (input.IsKeyPressed(Keyboard.S) || input.IsKeyPressed(Keyboard.DOWN))
+            if (input.IsKeyPressed(Keyboard.S) || input.IsKeyPressed(Keyboard.Down))
             {
                 direction += new Vector2(0, 1);
             }
 
-            if (input.IsKeyPressed(Keyboard.A) || input.IsKeyPressed(Keyboard.LEFT))
+            if (input.IsKeyPressed(Keyboard.A) || input.IsKeyPressed(Keyboard.Left))
             {
                 direction += new Vector2(-1, 0);
             }
 
-            if (input.IsKeyPressed(Keyboard.D) || input.IsKeyPressed(Keyboard.RIGHT))
+            if (input.IsKeyPressed(Keyboard.D) || input.IsKeyPressed(Keyboard.Right))
             {
                 direction += new Vector2(1, 0);
             }
 
             // Handle shooting
-            if (!isShooting && input.IsKeyPressed(Keyboard.SPACE))
+            if (!isShooting && input.IsKeyPressed(Keyboard.Space))
             {
                 Shoot();
                 isShooting = true;
             }
-            else if (isShooting && input.IsKeyReleased(Keyboard.SPACE))
+            else if (isShooting && input.IsKeyReleased(Keyboard.Space))
             {
                 isShooting = false;
             }

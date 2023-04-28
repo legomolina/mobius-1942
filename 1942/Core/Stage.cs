@@ -11,12 +11,18 @@ namespace _1942.Core
 {
     public abstract class Stage : IStage
     {
+        protected readonly GraphicsManager graphics;
+        protected readonly BatchRenderer renderer;
+
         public bool Active { get; set; }
         protected CollisionsContainer CollisionsContainer { get; private set; }
         public int Order { get; set; }
 
-        public Stage()
+        public Stage(GraphicsManager graphics, BatchRenderer renderer)
         {
+            this.graphics = graphics;
+            this.renderer = renderer;
+
             Active = true;
             CollisionsContainer = new CollisionsContainer();
             Order = 0;
