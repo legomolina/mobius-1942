@@ -32,7 +32,12 @@
         {
             float magnitude = Magnitude();
 
-            return new Vector2(X / magnitude, Y / magnitude);
+            if (magnitude > 0)
+            {
+                return new Vector2(X / magnitude, Y / magnitude);
+            }
+
+            return Zero;
         }
 
         public Vector2 Rotate(float angle)
@@ -69,7 +74,7 @@
 
         public override string ToString()
         {
-            return $"{X},{Y}";
+            return $"{X:0.00},{Y:0.00}";
         }
 
         public static Vector2 operator +(Vector2 a, Vector2 b)

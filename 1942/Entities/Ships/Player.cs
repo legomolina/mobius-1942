@@ -1,9 +1,11 @@
 ﻿using Engine.Components;
 using Engine.Core;
 using Engine.Core.Collisions;
+using Engine.Core.Input;
 using Engine.Core.Managers;
 using Engine.Core.Math;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace _1942.Entities.Ships
 {
@@ -117,44 +119,83 @@ namespace _1942.Entities.Ships
 
         private void HandleInput(GameTime gameTime)
         {
+            // Handle movement
+            Vector2 direction = GetMovementDirection();
+
+            // Handle shooting
+            HandleShooting();
+
+            if (direction != Vector2.Zero)
+            {
+                MoveTo(direction * Speed * gameTime.DeltaTime);
+            }
+        }
+
+        private Vector2 GetMovementDirection()
+        {
             Vector2 direction = Vector2.Zero;
             InputManager input = InputManager.Instance;
 
-            // Handle movement
-            if (input.IsKeyPressed(Keyboard.W) || input.IsKeyPressed(Keyboard.Up))
+            if (input.GameControllers[0] != null)
+            {
+                GameControllerStick leftStick = input.GameControllers[0]!.GetAxisPosition(GameControllerAxis.LeftStick);
+                float xPosition = LinearInterpolation.Range(-GameController.AXIS_MAX_VALUE, GameController.AXIS_MAX_VALUE, -1, 1, leftStick.X);
+                float yPosition = LinearInterpolation.Range(-GameController.AXIS_MAX_VALUE, GameController.AXIS_MAX_VALUE, -1, 1, leftStick.Y);
+
+                if (xPosition != 0 || yPosition != 0)
+                {
+                    return new Vector2(xPosition, yPosition);
+                }
+            }
+
+            if (input.Keyboard.IsKeyPressed(KeyboardKeys.W) || input.Keyboard.IsKeyPressed(KeyboardKeys.Up) || (input.GameControllers[0]?.IsButtonPressed(GameControllerButtons.DPadUp) ?? false))
             {
                 direction += new Vector2(0, -1);
             }
 
-            if (input.IsKeyPressed(Keyboard.S) || input.IsKeyPressed(Keyboard.Down))
+            if (input.Keyboard.IsKeyPressed(KeyboardKeys.S) || input.Keyboard.IsKeyPressed(KeyboardKeys.Down) || (input.GameControllers[0]?.IsButtonPressed(GameControllerButtons.DPadDown) ?? false))
             {
                 direction += new Vector2(0, 1);
             }
 
-            if (input.IsKeyPressed(Keyboard.A) || input.IsKeyPressed(Keyboard.Left))
+            if (input.Keyboard.IsKeyPressed(KeyboardKeys.A) || input.Keyboard.IsKeyPressed(KeyboardKeys.Left) || (input.GameControllers[0]?.IsButtonPressed(GameControllerButtons.DPadLeft) ?? false))
             {
                 direction += new Vector2(-1, 0);
             }
 
-            if (input.IsKeyPressed(Keyboard.D) || input.IsKeyPressed(Keyboard.Right))
+            if (input.Keyboard.IsKeyPressed(KeyboardKeys.D) || input.Keyboard.IsKeyPressed(KeyboardKeys.Right) || (input.GameControllers[0]?.IsButtonPressed(GameControllerButtons.DPadRight) ?? false))
             {
                 direction += new Vector2(1, 0);
             }
 
-            // Handle shooting
-            if (!isShooting && input.IsKeyPressed(Keyboard.Space))
+            return direction.Normalized();
+        }
+
+        private void HandleShooting()
+        {
+            InputManager input = InputManager.Instance;
+
+            if (input.GameControllers[0] != null)
+            {
+                if (!isShooting && input.GameControllers[0]!.IsButtonPressed(GameControllerButtons.A))
+                {
+                    Shoot();
+                    isShooting = true;
+                }
+                else if (isShooting && input.GameControllers[0]!.IsButtonReleased(GameControllerButtons.A))
+                {
+                    isShooting = false;
+                }
+            }
+
+            if (!isShooting && (input.Keyboard.IsKeyPressed(KeyboardKeys.Space)))
             {
                 Shoot();
                 isShooting = true;
             }
-            else if (isShooting && input.IsKeyReleased(Keyboard.Space))
+            else if (isShooting && input.Keyboard.IsKeyReleased(KeyboardKeys.Space))
             {
                 isShooting = false;
-            }
-
-            if (direction != Vector2.Zero)
-            {
-                MoveTo(direction.Normalized() * Speed * gameTime.DeltaTime);
             }
         }
 

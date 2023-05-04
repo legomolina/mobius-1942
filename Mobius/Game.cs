@@ -10,13 +10,12 @@ namespace Engine
         private readonly GameTime? gameTime;
 
         private bool isRunning = true;
-        private SDL_Event events;
 
-        protected BatchRenderer BatchRenderer { get; private set; }
-        protected int FrameRate { get; set; } = 120;
         protected AudioManager Audio { get; private set; }
+        protected BatchRenderer BatchRenderer { get; private set; }
         protected float FPS { get; private set; }
         protected GraphicsManager Graphics { get; private set; }
+        protected InputManager InputManager { get; private set; }
 
         public AssetManager AssetManager { get; private set; }
 
@@ -30,6 +29,7 @@ namespace Engine
             }
 
             Audio = AudioManager.Instance;
+            InputManager = InputManager.Instance;
 
             if (!Audio.Initialized)
             {
@@ -66,12 +66,14 @@ namespace Engine
 
                 gameTime!.Update();
 
-                while (SDL_PollEvent(out events) != 0)
+                while (SDL_PollEvent(out SDL_Event ev) != 0)
                 {
-                    if (events.type == SDL_EventType.SDL_QUIT)
+                    if (ev.type == SDL_EventType.SDL_QUIT)
                     {
                         isRunning = false;
                     }
+
+                    InputManager.HandleInputEvents(ev);
                 }
 
                 Render();
@@ -86,7 +88,11 @@ namespace Engine
             }
         }
 
-        public abstract void Update(GameTime gameTime);
+        public virtual void Update(GameTime gameTime)
+        {
+            InputManager.Update(gameTime);
+        }
+
         public abstract void Render();
     }
 }

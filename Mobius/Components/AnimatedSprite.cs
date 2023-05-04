@@ -22,7 +22,7 @@ namespace Engine.Components
         public int FrameHeight { get; private set; } = 0;
         public bool Loop { get; set; } = true;
 
-        public event EventHandler<EventArgs> OnAnimationEnd;
+        public event EventHandler<EventArgs>? OnAnimationEnd;
 
         public AnimatedSprite(Texture texture, int framesCount, AnimationDirections direction) : base(texture)
         {

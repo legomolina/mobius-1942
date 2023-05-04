@@ -9,7 +9,6 @@ namespace _1942
 {
     public class Game1942 : Game
     {
-        private readonly InputManager inputManager;
         private readonly StageManager stageManager;
 
         private MainMenu mainMenu;
@@ -20,7 +19,6 @@ namespace _1942
             Graphics.WindowWidth = 512;
             Graphics.WindowHeight = 800;
 
-            inputManager = InputManager.Instance;
             stageManager = new StageManager(this);
 
             mainMenu = new MainMenu(Graphics, BatchRenderer);
@@ -40,7 +38,7 @@ namespace _1942
 
         public override void Update(GameTime gameTime)
         {
-            inputManager.Update(gameTime);
+            base.Update(gameTime);
             stageManager.PeekStage().Update(gameTime);
         }
 

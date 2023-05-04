@@ -6,139 +6,94 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Engine.Core.Math;
+using System.Runtime.CompilerServices;
+using Engine.Core.Input;
 
 namespace Engine.Core.Managers
 {
-    public enum Keyboard
-    {
-        Space = 32,
-        Num_0 = 48,
-        Num_1,
-        Num_2,
-        Num_3,
-        Num_4,
-        Num_5,
-        Num_6,
-        Num_7,
-        Num_8,
-        Num_9,
-        A = 97,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H,
-        I,
-        J,
-        K,
-        L,
-        M,
-        N,
-        O,
-        P,
-        Q,
-        R,
-        S,
-        T,
-        U,
-        V,
-        W,
-        X,
-        Y,
-        Z,
-        Right = 1073741903,
-        Left,
-        Down,
-        Up,
-    }
-
-    [Flags]
-    public enum MouseButtons
-    {
-        None = 0,
-        Left = 1,
-        Middle = 2,
-        Right = 4,
-        Button_4 = 8,
-        Button_5 = 16,
-    }
-
     public class InputManager : IUpdatable
     {
+        private const int MAX_CONTROLLERS = 2;
+
         private static InputManager? instance;
 
-        private byte[]? keyboardState;
-        private byte[]? previousKeyboardState;
-        private MouseButtons mouseState = MouseButtons.None;
-        private MouseButtons previousMouseState = MouseButtons.None;
+        private readonly Mouse mouse = new();
+        private readonly Keyboard keyboard = new();
+        private readonly GameController?[] controllers = new GameController[MAX_CONTROLLERS];
+
+        public Mouse Mouse { get => mouse; }
+        public Keyboard Keyboard { get => keyboard; }
+        public GameController?[] GameControllers { get => controllers; }
 
         public static InputManager Instance
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new InputManager();
-                }
-
+                instance ??= new InputManager();
                 return instance;
             }
         }
-
-        public Point MousePosition { get; private set; }
+        
+        public bool Initialized { get; private set; }
 
         private InputManager()
         {
-
+            Initialized = Init();
         }
 
-        public bool IsKeyPressed(Keyboard key)
+        private bool Init()
         {
-            if (keyboardState == null)
+            if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0)
             {
-                throw new NullReferenceException("Update input manager before getting keyboard state");
+                Console.WriteLine($"SDL Controller initialization error: {SDL_GetError()}");
+                return false;
             }
 
-            byte keyCode = (byte)SDL_GetScancodeFromKey((SDL_Keycode)key);
-            return keyboardState[keyCode] == 1;
+            return true;
         }
 
-        public bool IsKeyReleased(Keyboard key)
+        internal void HandleInputEvents(SDL_Event ev)
         {
-            if (keyboardState == null || previousKeyboardState == null)
+            if (ev.type == SDL_EventType.SDL_CONTROLLERDEVICEADDED && ev.cdevice.which < MAX_CONTROLLERS)
             {
-                throw new NullReferenceException("Update input manager before getting keyboard state");
+                int deviceId = ev.cdevice.which;
+                IntPtr controller = SDL_GameControllerOpen(deviceId);
+
+                if (controller == IntPtr.Zero)
+                {
+                    Console.WriteLine($"SDL Game controller initialization error: {SDL_GetError()}");
+                    return;
+                }
+
+                controllers[deviceId]?.Dispose();
+                controllers[deviceId] = new GameController(controller);
             }
 
-            byte keyCode = (byte)SDL_GetScancodeFromKey((SDL_Keycode)key);
+            if (ev.type == SDL_EventType.SDL_CONTROLLERDEVICEREMOVED && ev.cdevice.which < MAX_CONTROLLERS)
+            {
+                int deviceId = ev.cdevice.which;
+                GameController? controller = controllers[deviceId];
 
-            return previousKeyboardState[keyCode] == 1 && keyboardState[keyCode] == 0;
-        }
+                if (controller == null)
+                {
+                    Console.WriteLine($"SDL Game controller removing error: {SDL_GetError()}");
+                    return;
+                }
 
-        public bool IsMouseButtonPressed(MouseButtons button)
-        {
-            return mouseState.HasFlag(button);
-        }
-
-        public bool IsMouseButtonReleased(MouseButtons button)
-        {
-            return previousMouseState.HasFlag(button) && !mouseState.HasFlag(button);
+                controller.Dispose();
+                controllers[deviceId] = null;
+            }
         }
 
         public void Update(GameTime gameTime)
         {
-            previousKeyboardState = keyboardState;
-            previousMouseState = mouseState;
+            mouse.Update(gameTime);
+            keyboard.Update(gameTime);
 
-            IntPtr keyboard = SDL_GetKeyboardState(out int arraySize);
-            keyboardState = new byte[arraySize];
-            Marshal.Copy(keyboard, keyboardState, 0, arraySize);
-
-            uint currentMouseState = SDL_GetMouseState(out int mouseX, out int mouseY);
-            MousePosition = new Point(mouseX, mouseY);
-            mouseState = (MouseButtons)currentMouseState;
+            foreach (GameController? controller in controllers)
+            {
+                controller?.Update(gameTime);
+            }
         }
     }
 }

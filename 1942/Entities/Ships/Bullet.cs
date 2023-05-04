@@ -15,11 +15,10 @@ namespace _1942.Entities.Ships
     public class Bullet : PhysicsEntity
     {
         private readonly GraphicsManager graphics;
-        private readonly BatchRenderer renderer;
+        private readonly Texture texture;
+        private readonly Sprite sprite;
 
         private Vector2 direction;
-        private Texture texture;
-        private Sprite sprite;
 
         public Ship Shooter { get; private set; }
         public int Damage { get; private set; }
@@ -30,7 +29,6 @@ namespace _1942.Entities.Ships
             this.graphics = graphics;
             this.direction = direction;
             this.texture = texture;
-            this.renderer = renderer;
 
             Damage = 30;
             Width = 16;

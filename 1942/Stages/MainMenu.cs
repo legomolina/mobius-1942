@@ -19,8 +19,8 @@ namespace _1942.Stages
         private Button quitGameButton;
         private Image backgroundImage;
 
-        public event EventHandler<EventArgs> NewGame;
-        public event EventHandler<EventArgs> QuitGame;
+        public event EventHandler<EventArgs>? NewGame;
+        public event EventHandler<EventArgs>? QuitGame;
 
         public MainMenu(GraphicsManager graphics, BatchRenderer renderer) : base(graphics, renderer)
         {

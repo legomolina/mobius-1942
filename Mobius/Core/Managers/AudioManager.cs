@@ -35,7 +35,7 @@ namespace Engine.Core.Managers
 
         private bool Init()
         {
-            if (SDL_Init(SDL_INIT_VIDEO) < 0)
+            if (SDL_Init(SDL_INIT_AUDIO) < 0)
             {
                 Console.WriteLine($"SDL Audio initialization error: {SDL_GetError()}");
                 return false;
