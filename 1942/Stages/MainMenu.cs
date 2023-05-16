@@ -18,12 +18,14 @@ namespace _1942.Stages
         private Button newGameButton;
         private Button quitGameButton;
         private Image backgroundImage;
+        private UIContainer uiContainer;
 
         public event EventHandler<EventArgs>? NewGame;
         public event EventHandler<EventArgs>? QuitGame;
 
         public MainMenu(GraphicsManager graphics, BatchRenderer renderer) : base(graphics, renderer)
         {
+            uiContainer = new UIContainer(renderer);
         }
 
         public override void Initialize() 
@@ -31,6 +33,9 @@ namespace _1942.Stages
             backgroundImage = new Image(graphics, renderer, "Assets/Textures/bg_menu.png");
             newGameButton = new Button(graphics, renderer);
             quitGameButton = new Button(graphics, renderer);
+
+            uiContainer.Insert(newGameButton);
+            uiContainer.Insert(quitGameButton);
         }
 
         public override void LoadContent(AssetManager assetManager)
@@ -67,8 +72,7 @@ namespace _1942.Stages
         public override void Render()
         {
             renderer.Render(backgroundImage);
-            renderer.Render(newGameButton);
-            renderer.Render(quitGameButton);
+            uiContainer.Render();
         }
 
         public override void Update(GameTime gameTime)
@@ -76,8 +80,7 @@ namespace _1942.Stages
             base.Update(gameTime);
 
             backgroundImage.Update(gameTime);
-            newGameButton.Update(gameTime);
-            quitGameButton.Update(gameTime);
+            uiContainer.Update(gameTime);
         }
     }
 }

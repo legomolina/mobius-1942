@@ -1,5 +1,6 @@
 ﻿using Engine.Components;
 using Engine.Core;
+using Engine.Core.Input;
 using Engine.Core.Managers;
 using Engine.Core.Math;
 using System;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace _1942.UI.Components
 {
-    public class Button : UIComponent
+    public class Button : UIInteractableComponent
     {
         private const string IDLE_TEXTURE = "Assets/Textures/UI/yellow_button_idle.png";
-        private const string PRESS_TEXURE = "Assets/Textures/UI/yellow_button_pressed.png";
+        private const string FOCUS_TEXURE = "Assets/Textures/UI/yellow_button_pressed.png";
 
         private readonly Label label;
         private readonly Image idleImage;
-        private readonly Image pressedImage;
+        private readonly Image focusImage;
 
         private Image currentImage;
 
@@ -32,28 +33,15 @@ namespace _1942.UI.Components
         {
             label = new Label(graphics, renderer);
             idleImage = new Image(graphics, renderer, IDLE_TEXTURE);
-            pressedImage = new Image(graphics, renderer, PRESS_TEXURE);
+            focusImage = new Image(graphics, renderer, FOCUS_TEXURE);
 
             currentImage = idleImage;
-
-            MouseDown += Button_MouseDown;
-            MouseUp += Button_MouseUp;
-        }
-
-        private void Button_MouseUp(object? sender, MouseEventArgs e)
-        {
-            currentImage = idleImage;
-        }
-
-        private void Button_MouseDown(object? sender, MouseEventArgs e)
-        {
-            currentImage = pressedImage;
         }
 
         public override void LoadContent(AssetManager assetManager)
         {
             idleImage.LoadContent(assetManager);
-            pressedImage.LoadContent(assetManager);
+            focusImage.LoadContent(assetManager);
 
             Width = idleImage.Width;
             Height = idleImage.Height;
@@ -69,7 +57,19 @@ namespace _1942.UI.Components
         {
             base.Update(gameTime);
 
+            GameController? controller = input.GameControllers[0];
+
+            if (controller != null && Focus)
+            {
+                if (controller.IsButtonReleased(GameControllerButtons.A))
+                {
+                    OnMouseUp();
+                }
+            }
+
             Point labelPosition = Position;
+
+            currentImage = Focus ? focusImage : idleImage;
 
             switch (Align)
             {
@@ -92,7 +92,7 @@ namespace _1942.UI.Components
             label.Font = Font;
             label.Position = labelPosition;
 
-            if (currentImage == pressedImage)
+            if (currentImage == focusImage)
             {
                 currentImage.Position = new Point(Position.X, Position.Y + 5);
                 label.Position = new Point(labelPosition.X, labelPosition.Y + 5);
