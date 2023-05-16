@@ -38,6 +38,7 @@ To make program run under linux I've needed to install the next packages:
 libsdl2-dev
 libsdl2-image-dev
 libsdl2-mixer-dev
+libsdl2-ttf-dev
 ```
 
 I suppose that program should install these libs automatically but I have no idea how to do it now, if anyone knows how or could point me to the correct direction just open an issue :)
